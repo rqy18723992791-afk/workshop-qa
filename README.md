@@ -265,6 +265,7 @@ sudo bash deploy/deploy.sh    # 更新：git pull、重建、重启、健康检�
 
 | 文档 | 内容 |
 | --- | --- |
+| [docs/handover.md](docs/handover.md) | 交接文档：环境启动、目录地图、已知坑与待办 |
 | [docs/index.md](docs/index.md) | 设计说明总索引 |
 | [docs/chunking.md](docs/chunking.md) | 切分与入库：标题栈、600 字、80 字重叠 |
 | [docs/retrieval.md](docs/retrieval.md) | 向量检索、30 条校准、0.6 阈值怎么定 |

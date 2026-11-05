@@ -14,6 +14,7 @@
 | 前端工程 | ✅ 完成（问答/排查/知识库三视图） | [frontend.md](frontend.md) |
 | 部署 | ✅ 本地生产态已跑通；公网待服务器信息 | [deployment.md](deployment.md)、[deploy/README.md](../deploy/README.md) |
 | 逐项验收与证据 | ✅ 完成 | [acceptance.md](acceptance.md) |
+| 交接与维护 | ✅ 完成 | [handover.md](handover.md) |
 
 ## 原始记录
 
