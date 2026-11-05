@@ -34,17 +34,24 @@ REGISTRY_PATH = _resolve("REGISTRY_PATH", "data/kb_registry.json")
 # ===== 检索参数 =====
 RETRIEVAL_TOP_K = int(os.getenv("RETRIEVAL_TOP_K", "4"))
 # 余弦相似度低于该阈值视为"知识库无相关内容"，用于拒答与端云路由。
-# 11-06 实测校准：12 个正向问题 min=0.534，10 个无关问题 avg=0.414、
-# 但"注塑机多少钱一台"达到 0.607（领域相关、知识库无答案）。单一阈值无法
-# 完全区分，取 0.5 保召回，精确拒答由 11-07 生成阶段的"只依据检索片段回答"兜底。
-RETRIEVAL_MIN_SIM = float(os.getenv("RETRIEVAL_MIN_SIM", "0.5"))
+# 30 条问句校准（backend/scripts/calibrate.py）：15 条可回答问题最低 0.675，
+# 8 条无关问题最高 0.522，中间存在 0.522～0.675 的安全间隔；取中点 0.6，
+# 两侧各留约 0.075 余量。领域相关但知识库无答案的"灰色问题"（0.436～0.617）
+# 会通过或落到生成层/云端判断，详见 docs/calibration.md。
+RETRIEVAL_MIN_SIM = float(os.getenv("RETRIEVAL_MIN_SIM", "0.6"))
 
 # ===== 切分与向量化 =====
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "600"))      # 单块目标字符数
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "80"))  # 相邻块重叠字符数
 EMBED_BATCH = int(os.getenv("EMBED_BATCH", "16"))      # 单次请求向量化的文本条数
 
-# ===== DeepSeek 云端兜底（11-13 端云路由使用）=====
+# ===== 端云协同路由 =====
+# auto：检索不命中或本地模型拒答时自动升级 DeepSeek；
+# kb_only：只用知识库，不调用云端（严格拒答模式）。
+ROUTE_MODE = os.getenv("ROUTE_MODE", "auto").strip().lower()
+CLOUD_TIMEOUT = int(os.getenv("CLOUD_TIMEOUT", "60"))
+
+# ===== DeepSeek 云端兜底 =====
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1")
 DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
