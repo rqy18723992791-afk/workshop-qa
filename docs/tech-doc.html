@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>车间智答 · 技术文档</title>
+<style>
+  @page { size: A4; margin: 0.5in 0.6in 0.55in; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", sans-serif;
+    font-size: 10pt;
+    line-height: 1.72;
+    color: #20242a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  p { margin: 0 0 7pt; text-align: justify; }
+  strong { color: #111820; }
+  a { color: #8a5a00; text-decoration: none; }
+
+  /* ===== 封面 ===== */
+  .cover {
+    height: 277mm;
+    padding: 20mm 18mm;
+    background: linear-gradient(150deg, #0b1118 0%, #111c26 58%, #17242f 100%);
+    color: #e9f1f7;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 14mm 14mm;
+    mask-image: radial-gradient(circle at 70% 20%, #000 0%, transparent 75%);
+  }
+  .cover-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
+  .cover-eyebrow {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 4pt 10pt;
+    border: 1px solid rgba(246,178,60,0.55);
+    color: #ffd479;
+    font-size: 9pt;
+    letter-spacing: 0.14em;
+  }
+  .cover h1 {
+    margin: 26mm 0 4mm;
+    font-size: 42pt;
+    line-height: 1.12;
+    letter-spacing: 0.06em;
+    color: #fff;
+  }
+  .cover .sub {
+    font-size: 15pt;
+    color: #c8d6e2;
+    letter-spacing: 0.05em;
+    margin-bottom: 6mm;
+  }
+  .cover .rule { width: 34mm; height: 3pt; background: #f6b23c; margin: 7mm 0; }
+  .cover .tagline {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9.5pt;
+    letter-spacing: 0.18em;
+    color: #f6b23c;
+  }
+  .cover .meta {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 28mm 1fr 28mm 1fr;
+    gap: 3.2mm 4mm;
+    padding-top: 8mm;
+    border-top: 1px solid rgba(255,255,255,0.16);
+    font-size: 9.5pt;
+  }
+  .cover .meta dt { color: #7e93a6; }
+  .cover .meta dd { margin: 0; color: #e9f1f7; }
+  .cover .cover-foot {
+    margin-top: 7mm;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 8pt;
+    color: #61798c;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ===== 正文 ===== */
+  .front, .chapter { page-break-before: always; }
+  .front.first, .chapter.first { page-break-before: auto; }
+  .front h1, .chapter h1 {
+    margin: 0 0 6mm;
+    padding: 0 0 3mm 4mm;
+    border-left: 5pt solid #f6b23c;
+    border-bottom: 1px solid #d9dee4;
+    font-size: 19pt;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    color: #0f141a;
+  }
+  .front h1 .no, .chapter h1 .no {
+    display: block;
+    margin-bottom: 1mm;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9pt;
+    letter-spacing: 0.18em;
+    color: #a06a10;
+  }
+  h2 {
+    margin: 6mm 0 2.5mm;
+    padding-bottom: 1.2mm;
+    border-bottom: 1px solid #e3e7eb;
+    font-size: 12.5pt;
+    color: #14202b;
+    page-break-after: avoid;
+  }
+  h3 { margin: 4.5mm 0 1.8mm; font-size: 10.5pt; color: #2c3a46; page-break-after: avoid; }
+  .lead { font-size: 10.5pt; color: #3b4854; }
+  ul, ol { margin: 0 0 7pt; padding-left: 6mm; }
+  li { margin-bottom: 2pt; }
+  .small { font-size: 8.8pt; color: #5c6b78; }
+  .mono { font-family: "Consolas", "Courier New", monospace; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2.5mm 0 5mm;
+    font-size: 8.9pt;
+    line-height: 1.55;
+  }
+  th, td { border: 1px solid #d5dbe1; padding: 1.6mm 2mm; vertical-align: top; text-align: left; }
+  th { background: #f2f5f8; color: #1b2835; font-weight: 700; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  td.c, th.c { text-align: center; }
+  .ok { color: #0f7a4d; font-weight: 700; }
+  .pending { color: #9a6500; font-weight: 700; }
+
+  .callout {
+    margin: 3mm 0 5mm;
+    padding: 3mm 4mm;
+    border-left: 4pt solid #f6b23c;
+    background: #fdf9f0;
+    font-size: 9.2pt;
+  }
+  .callout.blue { border-left-color: #4c7bd9; background: #f3f6fd; }
+  .callout.gray { border-left-color: #9aa8b5; background: #f6f8fa; }
+  .callout b { color: #8a5a00; }
+  .callout.blue b { color: #2f4f9e; }
+
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 1.5mm;
+    margin: 3mm 0 5mm;
+  }
+  .pipe-step {
+    flex: 1;
+    padding: 2.5mm 2mm;
+    border: 1px solid #d5dbe1;
+    border-top: 3pt solid #f6b23c;
+    background: #fbfcfd;
+    text-align: center;
+    font-size: 8.4pt;
+    line-height: 1.45;
+  }
+  .pipe-step b { display: block; font-family: "Consolas", monospace; font-size: 8pt; color: #a06a10; }
+  .pipe-arrow { align-self: center; color: #9aa8b5; font-size: 11pt; }
+
+  figure { margin: 3mm 0 5mm; page-break-inside: avoid; }
+  figure img {
+    display: block;
+    width: 100%;
+    border: 1px solid #d5dbe1;
+    border-radius: 1.5mm;
+  }
+  figure img.tall { width: 88%; margin: 0 auto; }
+  figcaption {
+    margin-top: 2mm;
+    text-align: center;
+    font-size: 8.5pt;
+    color: #5c6b78;
+  }
+
+  pre {
+    margin: 2.5mm 0 5mm;
+    padding: 3mm 4mm;
+    border: 1px solid #e0e5ea;
+    border-left: 3pt solid #9aa8b5;
+    background: #f7f9fb;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 8.4pt;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    page-break-inside: avoid;
+  }
+  code {
+    padding: 0.3mm 1.2mm;
+    border-radius: 1mm;
+    background: #eef2f6;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 8.8pt;
+  }
+  .toc { margin-top: 4mm; }
+  .toc-row {
+    display: flex;
+    align-items: baseline;
+    gap: 2mm;
+    padding: 0.55mm 0;
+    border-bottom: 1px dotted #cfd6dd;
+    font-size: 9.2pt;
+    line-height: 1.45;
+  }
+  .toc-row .toc-no { width: 11mm; flex: none; font-family: "Consolas", monospace; color: #a06a10; }
+  .toc-row .toc-name { flex: 1; }
+  .toc-row .toc-page { font-family: "Consolas", monospace; color: #5c6b78; }
+  .toc-row.sub { padding: 0.4mm 0 0.4mm 10mm; font-size: 8.7pt; color: #465563; border-bottom: none; line-height: 1.4; }
+  .toc-row.sub .toc-no { width: 10mm; color: #8a97a3; }
+
+  .abstract-box {
+    margin-top: 3mm;
+    padding: 4mm 5mm;
+    border: 1px solid #dfe4e9;
+    border-top: 3pt solid #f6b23c;
+    background: #fbfcfd;
+    font-size: 9.5pt;
+  }
+  .keywords { margin-top: 3mm; font-size: 9.2pt; color: #3b4854; }
+  .keywords b { color: #8a5a00; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .card {
+    padding: 3mm 4mm;
+    border: 1px solid #dfe4e9;
+    background: #fbfcfd;
+    font-size: 9pt;
+  }
+  .card b { display: block; margin-bottom: 1mm; color: #8a5a00; }
+  .avoid { page-break-inside: avoid; }
+  .mt0 { margin-top: 0; }
+  /* 第一章表格略紧凑，避免末行单独溢出到下一页 */
+  .chapter-one table { margin: 2mm 0 4mm; }
+  .chapter-one th, .chapter-one td { padding: 1.15mm 2mm; }
+  .chapter-one h2 { margin-top: 4.5mm; margin-bottom: 2mm; }
+  .chapter-one p { margin-bottom: 6pt; }
+</style>
+</head>
+<body>
+
+<!-- ================= 封面 ================= -->
+<section class="cover">
+  <div class="cover-inner">
+    <span class="cover-eyebrow">全国高校 AI WEB 开发挑战赛 · 参赛作品</span>
+    <h1>车间智答</h1>
+    <div class="sub">面向智能制造一线的本地化 AI 知识与故障排查助手</div>
+    <div class="rule"></div>
+    <div class="tagline">DATA STAYS IN THE FACTORY · ANSWERS STAY TRACEABLE</div>
+
+    <dl class="meta">
+      <dt>作品名称</dt><dd>车间智答（Workshop QA）</dd>
+      <dt>团队名称</dt><dd>【团队名称】</dd>
+      <dt>学校</dt><dd>【学校名称】</dd>
+      <dt>团队成员</dt><dd>【成员姓名 1】 · 【成员姓名 2】 · 【成员姓名 3】</dd>
+      <dt>指导教师</dt><dd>【指导教师姓名】</dd>
+      <dt>提交日期</dt><dd>2026 年 11 月</dd>
+    </dl>
+    <div class="cover-foot">
+      <span>VERSION 0.3.0 · TECHNICAL DOCUMENT</span>
+      <span>数据不出厂 · 离线可用 · 回答可溯源</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 摘要 ================= -->
+<section class="front first">
+  <h1><span class="no">ABSTRACT</span>摘要</h1>
+  <p class="lead">
+    注塑车间的设备手册、点检标准、故障案例与安全规程分散在 PDF、纸质文件和老师傅经验中，新人遇到报警往往只能翻手册、问师傅，响应慢且口径不一；直接使用通用大模型又存在设备数据外泄、模型编造报警代码与参数的风险。
+  </p>
+  <p>
+    本作品构建了一套<strong>本地优先的检索增强生成（RAG）问答与故障排查系统</strong>。系统将厂内 Markdown 文档按标题层级与段落切分，使用 bge-m3 生成 1024 维向量并存入 Chroma；提问时检索 top-4 片段，交由本地 Qwen2.5-7B 量化模型流式生成，答案逐句标注出处，资料不足时明确拒答。针对「手册没写但问题属于注塑领域」的灰区，系统在检索分数低于 0.6 或本地模型自评资料不足时自动升级 DeepSeek，并通过 SSE <code>route</code> 事件让界面实时显示路径与原因。故障排查采用 12 节点、11 结论的确定性状态机，每一步引用手册原文，走完生成可打印的 A4 处置单。知识库检索同时封装为 MCP 工具，可被其他 AI 应用复用。
+  </p>
+  <p>
+    实测结果：15 份示例文档、123 个切片；30 条问句校准出 0.6 的拒答阈值（正向最低 0.675、负向最高 0.522）；本地问题 top-1 0.7833、首字 0.25–1.0 s；云端升级用例 top-1 0.6589，正确触发 <code>route→cloud</code>；无关问题 0.4242 被拒答且来源为空；诊断链路 6 步生成处置单并通过 A4 打印验证；MCP 客户端调用检索 <code>max_score=0.8078</code>。系统已在本地以生产态单端口跑通，公网部署脚本与文档就绪。
+  </p>
+  <div class="abstract-box">
+    <strong>作品亮点</strong>
+    <ul class="mt0">
+      <li><strong>数据不出厂</strong>：检索、生成、诊断全部在本机 Ollama 完成，云端只处理低置信问题且只发送必要片段。</li>
+      <li><strong>回答可溯源</strong>：引用编号与后端 <code>sources.index</code> 同源，展示文档名、编号、章节路径与相似度。</li>
+      <li><strong>知道就说，不知道就拒</strong>：检索阈值 + 生成层自评两层拒答，拒答时来源置空，不列假出处。</li>
+      <li><strong>路径对用户可见</strong>：本地/云端标签、切换原因、检索分数和耗时都在界面上，演示可验证。</li>
+      <li><strong>确定性诊断</strong>：状态机保证安全步骤不被跳过，结论可复现、可追责，输出纸质处置单。</li>
+      <li><strong>能力可复用</strong>：知识库检索做成 MCP 工具，标准客户端即可发现并调用。</li>
+    </ul>
+  </div>
+  <p class="keywords"><b>关键词：</b>检索增强生成（RAG）；本地大模型；端云协同；故障诊断状态机；MCP；可溯源问答</p>
+</section>
+
+<!-- ================= 目录 ================= -->
+<section class="front">
+  <h1><span class="no">CONTENTS</span>目录</h1>
+  <div class="toc">
+    <div class="toc-row"><span class="toc-no">1</span><span class="toc-name">概述</span><span class="toc-page" data-ref="1">5</span></div>
+    <div class="toc-row sub"><span class="toc-no">1.1</span><span class="toc-name">背景与痛点</span><span class="toc-page" data-ref="1.1">5</span></div>
+    <div class="toc-row sub"><span class="toc-no">1.2</span><span class="toc-name">产品定义与目标用户</span><span class="toc-page" data-ref="1.2">5</span></div>
+    <div class="toc-row sub"><span class="toc-no">1.3</span><span class="toc-name">作品亮点</span><span class="toc-page" data-ref="1.3">5</span></div>
+    <div class="toc-row"><span class="toc-no">2</span><span class="toc-name">需求分析</span><span class="toc-page" data-ref="2">6</span></div>
+    <div class="toc-row sub"><span class="toc-no">2.1</span><span class="toc-name">功能需求</span><span class="toc-page" data-ref="2.1">6</span></div>
+    <div class="toc-row sub"><span class="toc-no">2.2</span><span class="toc-name">非功能需求</span><span class="toc-page" data-ref="2.2">6</span></div>
+    <div class="toc-row sub"><span class="toc-no">2.3</span><span class="toc-name">范围边界与用户旅程</span><span class="toc-page" data-ref="2.3">6</span></div>
+    <div class="toc-row"><span class="toc-no">3</span><span class="toc-name">系统架构</span><span class="toc-page" data-ref="3">8</span></div>
+    <div class="toc-row sub"><span class="toc-no">3.1</span><span class="toc-name">总体架构</span><span class="toc-page" data-ref="3.1">8</span></div>
+    <div class="toc-row sub"><span class="toc-no">3.2</span><span class="toc-name">前端与后端结构</span><span class="toc-page" data-ref="3.2">8</span></div>
+    <div class="toc-row sub"><span class="toc-no">3.3</span><span class="toc-name">数据与存储</span><span class="toc-page" data-ref="3.3">8</span></div>
+    <div class="toc-row sub"><span class="toc-no">3.4</span><span class="toc-name">技术选型</span><span class="toc-page" data-ref="3.4">9</span></div>
+    <div class="toc-row"><span class="toc-no">4</span><span class="toc-name">AI 方案</span><span class="toc-page" data-ref="4">10</span></div>
+    <div class="toc-row sub"><span class="toc-no">4.1</span><span class="toc-name">RAG 总览与文档切分</span><span class="toc-page" data-ref="4.1">10</span></div>
+    <div class="toc-row sub"><span class="toc-no">4.2</span><span class="toc-name">向量化与检索</span><span class="toc-page" data-ref="4.2">10</span></div>
+    <div class="toc-row sub"><span class="toc-no">4.3</span><span class="toc-name">拒答阈值校准与两层拒答</span><span class="toc-page" data-ref="4.3">10</span></div>
+    <div class="toc-row sub"><span class="toc-no">4.4</span><span class="toc-name">端云协同路由</span><span class="toc-page" data-ref="4.4">11</span></div>
+    <div class="toc-row sub"><span class="toc-no">4.5</span><span class="toc-name">确定性故障诊断状态机</span><span class="toc-page" data-ref="4.5">11</span></div>
+    <div class="toc-row sub"><span class="toc-no">4.6</span><span class="toc-name">MCP 工具化与安全可控</span><span class="toc-page" data-ref="4.6">12</span></div>
+    <div class="toc-row"><span class="toc-no">5</span><span class="toc-name">功能实现</span><span class="toc-page" data-ref="5">13</span></div>
+    <div class="toc-row sub"><span class="toc-no">5.1</span><span class="toc-name">问答界面与引用展示</span><span class="toc-page" data-ref="5.1">13</span></div>
+    <div class="toc-row sub"><span class="toc-no">5.2</span><span class="toc-name">路由可视化与错误处理</span><span class="toc-page" data-ref="5.2">14</span></div>
+    <div class="toc-row sub"><span class="toc-no">5.3</span><span class="toc-name">故障排查与处置单</span><span class="toc-page" data-ref="5.3">14</span></div>
+    <div class="toc-row sub"><span class="toc-no">5.4</span><span class="toc-name">知识库管理与检索测试台</span><span class="toc-page" data-ref="5.4">15</span></div>
+    <div class="toc-row sub"><span class="toc-no">5.5</span><span class="toc-name">SSE 协议与工程结构</span><span class="toc-page" data-ref="5.5">16</span></div>
+    <div class="toc-row"><span class="toc-no">6</span><span class="toc-name">测试与部署</span><span class="toc-page" data-ref="6">18</span></div>
+    <div class="toc-row sub"><span class="toc-no">6.1</span><span class="toc-name">测试方法与功能验收</span><span class="toc-page" data-ref="6.1">18</span></div>
+    <div class="toc-row sub"><span class="toc-no">6.2</span><span class="toc-name">关键实验数据</span><span class="toc-page" data-ref="6.2">18</span></div>
+    <div class="toc-row sub"><span class="toc-no">6.3</span><span class="toc-name">性能与部署</span><span class="toc-page" data-ref="6.3">19</span></div>
+    <div class="toc-row sub"><span class="toc-no">6.4</span><span class="toc-name">安全清单与已知限制</span><span class="toc-page" data-ref="6.4">19</span></div>
+    <div class="toc-row"><span class="toc-no">7</span><span class="toc-name">总结与展望</span><span class="toc-page" data-ref="7">20</span></div>
+    <div class="toc-row sub"><span class="toc-no">7.1</span><span class="toc-name">完成情况</span><span class="toc-page" data-ref="7.1">20</span></div>
+    <div class="toc-row sub"><span class="toc-no">7.2</span><span class="toc-name">技术创新点与应用创新点</span><span class="toc-page" data-ref="7.2">20</span></div>
+    <div class="toc-row sub"><span class="toc-no">7.3</span><span class="toc-name">不足与展望</span><span class="toc-page" data-ref="7.3">20</span></div>
+    <div class="toc-row"><span class="toc-no">A</span><span class="toc-name">附录 A　AI 生成代码说明</span><span class="toc-page" data-ref="A">22</span></div>
+    <div class="toc-row"><span class="toc-no">B</span><span class="toc-name">附录 B　复现与接口</span><span class="toc-page" data-ref="B">24</span></div>
+  </div>
+</section>
+
+<!-- ================= 1 概述 ================= -->
+<section class="chapter chapter-one">
+  <h1><span class="no">CHAPTER 01</span>概述</h1>
+
+  <h2 data-sec="1.1">1.1 背景与痛点</h2>
+  <p>
+    注塑车间的知识形态很不「数字化」：设备操作手册是 PDF，点检标准贴在机台，故障案例掌握在老师傅手里，安全规程是纸质文件。新人遇到 A-101 温度报警，通常要经历「翻手册找章节 → 问师傅 → 在群里发消息」的过程，响应慢，而且不同人给出的判断标准不一致。
+  </p>
+  <p>
+    通用大模型看起来是一个直接答案，但放进工厂会碰到三条硬边界：
+  </p>
+  <ul>
+    <li><strong>数据边界</strong>：设备参数、工艺配方、故障记录属于厂内数据，不能默认上传公有云；</li>
+    <li><strong>可信边界</strong>：模型会用相似场景的报警代码、参数值「补全」答案，看起来专业，实际无法追责；</li>
+    <li><strong>流程边界</strong>：电气、高温相关的排查必须按安全顺序执行，不能让模型自由决定「下一步问什么」。</li>
+  </ul>
+  <p>
+    因此，作品的目标不是做一个「更会聊天的设备助手」，而是做一个<strong>答案有出处、拒答有依据、路径可解释、数据留在厂内</strong>的车间知识工具。
+  </p>
+
+  <h2 data-sec="1.2">1.2 产品定义与目标用户</h2>
+  <p>
+    「车间智答」是面向智能制造一线的本地化 AI 知识与故障排查助手。厂内文档进入知识库后，一线人员用自然语言提问，系统在本机完成检索与生成，答案带原文出处；本地资料不足时按配置升级云端；有固定排查路径的故障走状态机向导，输出可打印的处置单。
+  </p>
+  <table>
+    <thead><tr><th style="width:22%">用户</th><th>典型诉求</th><th style="width:30%">系统回应</th></tr></thead>
+    <tr><td>新入职操作工</td><td>开机前检查什么、报警怎么处理、参数在哪里看</td><td>本地 RAG 问答 + 引用原文，按手册步骤回答</td></tr>
+    <tr><td>班组长 / 老师傅</td><td>快速确认判断标准，把经验沉淀成可查记录</td><td>知识库管理、检索测试台、处置单归档</td></tr>
+    <tr><td>设备工程师</td><td>按安全顺序排查电气/温度故障，留下处理依据</td><td>诊断状态机、每步手册依据、A4 处置单</td></tr>
+    <tr><td>安全员</td><td>确认回答没有跳过断电、挂牌、冷却等安全步骤</td><td>诊断链首节点强制安全确认；回答保留安全提示</td></tr>
+  </table>
+
+  <h2 data-sec="1.3">1.3 作品亮点</h2>
+  <table>
+    <thead><tr><th style="width:24%">亮点</th><th>具体做法</th></tr></thead>
+    <tr><td>数据不出厂</td><td>检索、生成、诊断均在本机 Ollama 完成；云端只处理低置信问题，且只发送问题与必要片段</td></tr>
+    <tr><td>回答可溯源</td><td>每个片段带文档名、编号、章节路径、相似度；引用编号与 <code>sources.index</code> 同源生成</td></tr>
+    <tr><td>两层拒答</td><td>检索层 0.6 阈值挡住无关问题；生成层判断资料是否足够；拒答时来源置空</td></tr>
+    <tr><td>端云协同</td><td>低置信自动升级 DeepSeek，SSE <code>route</code> 事件让界面实时标注路径与原因</td></tr>
+    <tr><td>确定性诊断</td><td>12 节点 / 11 结论状态机，每步依据手册，可回退，输出可打印处置单</td></tr>
+    <tr><td>能力可复用</td><td>知识库检索封装为 MCP 工具，标准客户端可发现并调用</td></tr>
+  </table>
+</section>
+
+<!-- ================= 2 需求 ================= -->
+<section class="chapter">
+  <h1><span class="no">CHAPTER 02</span>需求分析</h1>
+
+  <h2 data-sec="2.1">2.1 功能需求</h2>
+  <table>
+    <thead><tr><th style="width:9%">编号</th><th style="width:24%">需求</th><th>验收标准</th><th style="width:9%" class="c">状态</th></tr></thead>
+    <tr><td>FR-01</td><td>文档导入与知识库管理</td><td>支持 Markdown/txt 导入、切分、向量化、入库；可查看、删除、重建索引</td><td class="c ok">通过</td></tr>
+    <tr><td>FR-02</td><td>RAG 流式问答</td><td>答案逐字返回；下方列出来源（文档名 + 片段）；点击可查看原文</td><td class="c ok">通过</td></tr>
+    <tr><td>FR-03</td><td>无依据拒答</td><td>知识库没有相关内容时明确拒答，不编造，不列假出处</td><td class="c ok">通过</td></tr>
+    <tr><td>FR-04</td><td>故障排查向导</td><td>从症状走完一条完整诊断链；每步有手册依据；可回退；生成结构化处置单并导出/打印</td><td class="c ok">通过</td></tr>
+    <tr><td>FR-05</td><td>端云协同路由</td><td>低置信自动升级云端；界面标注本地/云端及原因；两种路径均可实测</td><td class="c ok">通过</td></tr>
+    <tr><td>FR-06</td><td>MCP 工具封装</td><td>知识库检索可被 MCP 客户端调用并返回检索结果</td><td class="c ok">通过</td></tr>
+    <tr><td>FR-07</td><td>部署与运维</td><td>本地全链路跑通；提供部署脚本、Nginx/systemd 配置与说明</td><td class="c pending">本地通过，公网待部署</td></tr>
+  </table>
+
+  <h2 data-sec="2.2">2.2 非功能需求</h2>
+  <table>
+    <thead><tr><th style="width:20%">维度</th><th>要求</th><th style="width:34%">实现</th></tr></thead>
+    <tr><td>数据安全</td><td>密钥不入库；设备数据默认不出厂</td><td>密钥只在 <code>backend/.env</code>（600）；本地优先路由；云端只发必要片段</td></tr>
+    <tr><td>可用性</td><td>断网时本地问答仍可用</td><td>Ollama + Chroma 本地运行；云端失败回退为拒答并提示</td></tr>
+    <tr><td>响应速度</td><td>本地首字 &lt; 2 s；云端首字 &lt; 5 s（开发机）</td><td>模型常驻、top-4 检索、流式输出；实测本地 0.25–1.0 s，云端 2.35–3.3 s</td></tr>
+    <tr><td>可解释性</td><td>用户能知道答案来自哪、为什么走这条路</td><td>引用卡片、路由标签、检索分数、耗时、切换原因全部可见</td></tr>
+    <tr><td>易用性</td><td>车间一线可操作；手机/平板可用</td><td>大字号、少层级、示例问题、触控友好；390×844 实测无横向溢出</td></tr>
+    <tr><td>可维护性</td><td>模块边界清晰，答辩可讲清</td><td>路由/服务分层；每个核心模块一页讲义式设计说明；验收脚本可复现</td></tr>
+  </table>
+
+  <h2 data-sec="2.3">2.3 范围边界与用户旅程</h2>
+  <p><strong>明确不做</strong>：用户注册/登录、权限管理、多设备类型、真实工厂数据接入、APP 客户端、多模态拍照诊断。这些能力会显著增加账号、权限与数据合规复杂度，当前版本优先把「问答—拒答—路由—诊断」主链路做扎实。</p>
+  <p><strong>典型旅程</strong>：</p>
+  <ol>
+    <li>操作工打开系统，点「开机前检查」示例问题，得到带引用的检查清单；</li>
+    <li>遇到手册没写的问题，系统自动升级云端，界面标签变蓝并说明原因；</li>
+    <li>遇到温度异常，进入故障排查，按安全确认 → 现象 → 电阻 → 端子 → 热电偶 → SSR 的顺序检查；</li>
+    <li>走完生成处置单，打印签字，交设备科复核；</li>
+    <li>班组长在知识库页上传新手册，重建索引，检索测试台立即验证。</li>
+  </ol>
+</section>
+
+<!-- ================= 3 架构 ================= -->
+<section class="chapter">
+  <h1><span class="no">CHAPTER 03</span>系统架构</h1>
+
+  <h2 data-sec="3.1">3.1 总体架构</h2>
+  <p>
+    系统采用「单页前端 + FastAPI AI 接入层 + 本地模型/向量库 + 可选云端」的四层结构。前端构建产物由 FastAPI 直接托管，生产环境只有一个 8000 端口，Nginx 负责 TLS 与反向代理。
+  </p>
+  <figure>
+    <svg viewBox="0 0 980 560" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, sans-serif">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#7e93a6"/>
+        </marker>
+      </defs>
+      <rect x="330" y="18" width="320" height="70" rx="6" fill="#111921" stroke="#32465a"/>
+      <text x="490" y="48" text-anchor="middle" fill="#e9f1f7" font-size="16" font-weight="bold">浏览器 · Vue 3 单页应用</text>
+      <text x="490" y="70" text-anchor="middle" fill="#9fb3c4" font-size="11">问答 / 故障排查 / 知识库管理 · SSE 流式渲染</text>
+
+      <line x1="490" y1="88" x2="490" y2="126" stroke="#7e93a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="330" y="130" width="320" height="58" rx="6" fill="#f6b23c" stroke="#c98a1e"/>
+      <text x="490" y="154" text-anchor="middle" fill="#231a08" font-size="15" font-weight="bold">Nginx 反向代理</text>
+      <text x="490" y="174" text-anchor="middle" fill="#4a3812" font-size="11">80 / 443 · proxy_buffering off（保证 SSE）</text>
+
+      <line x1="490" y1="188" x2="490" y2="226" stroke="#7e93a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="250" y="230" width="480" height="96" rx="6" fill="#fbfcfd" stroke="#9aa8b5"/>
+      <text x="490" y="254" text-anchor="middle" fill="#14202b" font-size="15" font-weight="bold">FastAPI · AI 接入层</text>
+      <rect x="270" y="266" width="136" height="44" rx="4" fill="#eef2f6" stroke="#d5dbe1"/>
+      <text x="338" y="285" text-anchor="middle" fill="#2c3a46" font-size="11">知识库 API</text>
+      <text x="338" y="301" text-anchor="middle" fill="#5c6b78" font-size="9.5">导入 / 检索 / 管理</text>
+      <rect x="422" y="266" width="136" height="44" rx="4" fill="#eef2f6" stroke="#d5dbe1"/>
+      <text x="490" y="285" text-anchor="middle" fill="#2c3a46" font-size="11">问答与路由</text>
+      <text x="490" y="301" text-anchor="middle" fill="#5c6b78" font-size="9.5">RAG / 拒答 / 云端</text>
+      <rect x="574" y="266" width="136" height="44" rx="4" fill="#eef2f6" stroke="#d5dbe1"/>
+      <text x="642" y="285" text-anchor="middle" fill="#2c3a46" font-size="11">诊断状态机</text>
+      <text x="642" y="301" text-anchor="middle" fill="#5c6b78" font-size="9.5">会话 / 处置单</text>
+
+      <line x1="338" y1="326" x2="180" y2="392" stroke="#7e93a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="490" y1="326" x2="490" y2="392" stroke="#7e93a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="642" y1="326" x2="800" y2="392" stroke="#7e93a6" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="60" y="396" width="240" height="90" rx="6" fill="#f3f6fd" stroke="#9db4e8"/>
+      <text x="180" y="422" text-anchor="middle" fill="#1d356e" font-size="14" font-weight="bold">Chroma 向量库</text>
+      <text x="180" y="444" text-anchor="middle" fill="#44557a" font-size="10.5">本地持久化 · cosine</text>
+      <text x="180" y="462" text-anchor="middle" fill="#44557a" font-size="10.5">15 份文档 / 123 切片</text>
+
+      <rect x="370" y="396" width="240" height="90" rx="6" fill="#f3f6fd" stroke="#9db4e8"/>
+      <text x="490" y="422" text-anchor="middle" fill="#1d356e" font-size="14" font-weight="bold">Ollama 本地模型</text>
+      <text x="490" y="444" text-anchor="middle" fill="#44557a" font-size="10.5">Qwen2.5-7B（生成）</text>
+      <text x="490" y="462" text-anchor="middle" fill="#44557a" font-size="10.5">bge-m3（1024 维向量）</text>
+
+      <rect x="680" y="396" width="240" height="90" rx="6" fill="#fdf9f0" stroke="#e0c184"/>
+      <text x="800" y="422" text-anchor="middle" fill="#6b4a08" font-size="14" font-weight="bold">DeepSeek API（可选）</text>
+      <text x="800" y="444" text-anchor="middle" fill="#7a5a20" font-size="10.5">仅低置信问题升级</text>
+      <text x="800" y="462" text-anchor="middle" fill="#7a5a20" font-size="10.5">只发送问题与必要片段</text>
+
+      <rect x="60" y="510" width="860" height="36" rx="4" fill="#f7f9fb" stroke="#d5dbe1"/>
+      <text x="490" y="533" text-anchor="middle" fill="#5c6b78" font-size="10.5">数据层：data/docs（源文档） · data/chroma（向量） · data/kb_registry.json（文档清单） · 诊断会话（内存，2h TTL）</text>
+    </svg>
+    <figcaption>图 3-1　系统总体架构：单端口前端 + AI 接入层 + 本地模型/向量库 + 可选云端</figcaption>
+  </figure>
+
+  <h2 data-sec="3.2">3.2 前端与后端结构</h2>
+  <p>
+    <strong>前端</strong>采用 Vue 3 <code>&lt;script setup&gt;</code> + TypeScript strict，不引入 UI 框架。外壳 <code>App.vue</code> 负责导航、健康状态灯和 <code>KeepAlive</code>；三个视图各自持有状态，切页不丢问答与诊断进度。路由使用 <code>location.hash</code>（<code>#chat/#diag/#kb</code>），刷新可恢复。SSE 用 <code>fetch</code> + <code>ReadableStream</code> 手写解析，支持 POST、长问题和中途停止。
+  </p>
+  <p>
+    <strong>后端</strong>按「路由层 + 服务层」划分：<code>routers/</code> 只做参数校验与 HTTP 映射，<code>services/</code> 承担切分、向量化、检索、生成、路由、诊断。除诊断会话外全部无状态，便于重启与水平扩展；诊断会话存在进程内存并加锁，2 小时 TTL。
+  </p>
+
+  <h2 data-sec="3.3">3.3 数据与存储</h2>
+  <table>
+    <thead><tr><th style="width:24%">数据</th><th style="width:28%">位置</th><th>说明</th></tr></thead>
+    <tr><td>源文档</td><td><code>data/docs/*.md</code></td><td>15 份自编注塑机手册、点检、案例、安规、工艺文档</td></tr>
+    <tr><td>向量与片段</td><td><code>data/chroma/</code></td><td>Chroma 持久化集合，余弦距离；每条含正文与元数据</td></tr>
+    <tr><td>文档清单</td><td><code>data/kb_registry.json</code></td><td>文档级记录：编号、标题、类别、版本、切片数、导入时间</td></tr>
+    <tr><td>诊断会话</td><td>进程内存 <code>_sessions</code></td><td>当前节点、历史栈、结论；2 小时 TTL，重启丢失</td></tr>
+    <tr><td>密钥与配置</td><td><code>backend/.env</code></td><td>不入库，部署时 600 权限；仓库只留 <code>.env.example</code></td></tr>
+  </table>
+
+  <h2 data-sec="3.4">3.4 技术选型</h2>
+  <table>
+    <thead><tr><th style="width:18%">层</th><th style="width:30%">选择</th><th>理由与代价</th></tr></thead>
+    <tr><td>前端</td><td>Vue 3 + Vite + TS，无 UI 框架</td><td>组合式 API 适合拆分流式与状态；自建设计令牌保证工业风一致；代价是组件自维护</td></tr>
+    <tr><td>后端</td><td>Python FastAPI</td><td>异步流式、类型校验、自动 API 文档；只做 AI 接入层，不引入用户系统</td></tr>
+    <tr><td>本地模型</td><td>Qwen2.5-7B q4_K_M + bge-m3</td><td>中文能力强、7B 量化可跑在单卡/CPU；bge-m3 中文语义与长文本表现稳定</td></tr>
+    <tr><td>向量库</td><td>Chroma</td><td>本地持久化、零服务依赖、Python 原生；规模上千后可换 Milvus/pgvector</td></tr>
+    <tr><td>云端</td><td>DeepSeek OpenAI 兼容 API</td><td>低成本、中文工程语境好；只作低置信兜底</td></tr>
+    <tr><td>部署</td><td>systemd + Nginx + 单端口 FastAPI</td><td>环境简单、排查直观；Nginx 关闭缓冲保证 SSE</td></tr>
+  </table>
+</section>
+
+<!-- ================= 4 AI 方案 ================= -->
+<section class="chapter">
+  <h1><span class="no">CHAPTER 04</span>AI 方案</h1>
+
+  <h2 data-sec="4.1">4.1 RAG 总览与文档切分</h2>
+  <p>
+    系统的默认路径是「检索增强生成」：先把厂内文档变成可检索的片段，再把最相关的几段交给本地模型，模型只许依据这些片段作答。
+  </p>
+  <div class="pipeline">
+    <div class="pipe-step"><b>01</b>标题/段落<br/>切分</div><span class="pipe-arrow">→</span>
+    <div class="pipe-step"><b>02</b>bge-m3<br/>向量化</div><span class="pipe-arrow">→</span>
+    <div class="pipe-step"><b>03</b>Chroma<br/>top-4 检索</div><span class="pipe-arrow">→</span>
+    <div class="pipe-step"><b>04</b>阈值判断<br/>0.6</div><span class="pipe-arrow">→</span>
+    <div class="pipe-step"><b>05</b>Qwen 生成<br/>带引用</div><span class="pipe-arrow">→</span>
+    <div class="pipe-step"><b>06</b>SSE 流式<br/>来源卡片</div>
+  </div>
+  <p>
+    <strong>切分策略</strong>：每份文档文首有 <code>---</code> 包裹的元数据（文档名、编号、类别、版本、日期）；正文按 Markdown 标题维护标题栈，得到「三、可能原因 &gt; 3.2 加热圈检查」这样的章节路径；节内按空行切段，超过 600 字符才硬切，相邻块保留 80 字重叠。每个块存两份文本：<code>text</code> 用于引用展示，<code>embed_text = 文档名｜类别｜章节路径 + 正文</code> 只用于向量化。这样既保留文档级语义，又不把拼接前缀混进给用户看的原文。
+  </p>
+  <p>
+    15 份示例文档切出 <strong>123 个切片，平均约 140 字，最长 600 字</strong>。块偏小是刻意的：检索精度优先，宁可多召回几块，也不让一个块混入多个主题。
+  </p>
+
+  <h2 data-sec="4.2">4.2 向量化与检索</h2>
+  <p>
+    bge-m3 将中文句子映射为 1024 维向量，Chroma 使用 cosine 空间。检索返回的 <code>distance</code> 是余弦距离（0～2），系统统一换算为 <code>score = 1 - distance</code>，数值越大越相关。取 top-4 的理由是：一个具体操作问题通常 1～2 个章节就能回答，4 段约 500～1000 字，既覆盖不同侧面，又不会把 7B 模型的 4K 上下文挤满；实测调大到 6 段质量无明显提升、首字变慢，调到 2 段会漏掉跨文档的安全规程。
+  </p>
+  <p>
+    检索结果同时返回 <code>max_score</code>、阈值 <code>min_sim</code> 与 <code>has_relevant</code>，供问答层与 MCP 调用方判断是否需要拒答。
+  </p>
+
+  <h2 data-sec="4.3">4.3 拒答阈值校准与两层拒答</h2>
+  <p>
+    阈值不是模型自带参数，而是业务判断：误收一条无关资料，可能让模型编造答案；误拒一条有用资料，用户会觉得系统「什么都不知道」。我们用 30 条问句做校准，只检索、不生成：
+  </p>
+  <table>
+    <thead><tr><th style="width:18%">组别</th><th class="c" style="width:12%">数量</th><th>目的</th><th style="width:26%">结果</th></tr></thead>
+    <tr><td>正向</td><td class="c">15</td><td>知识库明确能回答</td><td>最低 0.675，平均 0.754</td></tr>
+    <tr><td>负向</td><td class="c">8</td><td>与注塑车间无关</td><td>最高 0.522，平均 0.378</td></tr>
+    <tr><td>灰区</td><td class="c">7</td><td>注塑相关但知识库没写</td><td>范围 0.436～0.617</td></tr>
+  </table>
+  <p>
+    正向最低分高于负向最高分，中间存在安全带 <code>[0.522, 0.675]</code>。取中点 <strong>0.6</strong>，两侧各留约 0.075 余量，比取 0.675（贴正向最低分）或 0.522（贴负向最高分）更抗样本波动。最初凭经验用 0.5，校准时发现「手机屏幕碎了怎么办」得分 0.522 会被放行，因此改为 0.6。校准脚本最初直接推荐最小正向分 0.675，属于对样本过拟合；后来改为「存在安全带时取中点」，这段修正过程也保留在文档里。
+  </p>
+  <p>
+    阈值不是万能的。灰区问题（注塑相关、知识库没写）可能落在 0.6 附近，所以系统用两层拒答：
+  </p>
+  <table>
+    <thead><tr><th style="width:18%">层</th><th style="width:32%">触发条件</th><th>行为</th></tr></thead>
+    <tr><td>检索层</td><td><code>max_score &lt; 0.6</code></td><td>不调用本地模型；auto 模式直接上云，kb_only 直接拒答</td></tr>
+    <tr><td>生成层</td><td>过了阈值，但模型判断资料不足</td><td>输出固定拒答语；auto 模式缓冲后带资料升级云端</td></tr>
+    <tr><td>路由层</td><td>云端也拒答 / 云端不可用</td><td>返回云端拒答或回退本地拒答，<code>sources=[]</code></td></tr>
+  </table>
+  <p class="small">生成层拒答时服务端把 <code>sources</code> 置空，避免界面出现「拒答但列了一堆出处」的自相矛盾展示。</p>
+
+  <h2 data-sec="4.4">4.4 端云协同路由</h2>
+  <p>
+    路由发生在检索之后、生成之前/之中，分四种情况：
+  </p>
+  <table>
+    <thead><tr><th style="width:30%">情况</th><th>行为</th><th style="width:24%">界面</th></tr></thead>
+    <tr><td>命中（≥0.6），本地正常答</td><td>本地生成，带引用</td><td>绿色「本地模型 · 知识库作答」</td></tr>
+    <tr><td>命中，本地输出拒答语</td><td>缓冲拒答，改走云端（带资料）</td><td>收到 <code>route</code> 后变蓝色「云端模型 · 通用建议」</td></tr>
+    <tr><td>不命中（&lt;0.6），auto</td><td>直接把问题发云端（不带资料）</td><td>蓝色「云端模型」，原因写明分数低于阈值</td></tr>
+    <tr><td>不命中，<code>kb_only</code></td><td>本地固定拒答，不联网</td><td>绿色「本地模型 · 已拒答」</td></tr>
+  </table>
+  <p>
+    <strong>为什么缓冲本地拒答</strong>：流式生成时，如果模型先吐出「知识库中暂无相关记录」，前端会先显示拒答卡片，几百毫秒后又变成云端答案，体验很差。因此本地流式输出先进入缓冲区：只要还是拒答语前缀就继续攒；一旦分叉，确认是正常答案，把缓冲一次性发出；如果完整输出就是拒答语，丢弃缓冲并发 <code>route</code> 切云端。用户要么看到完整的本地答案，要么直接看到云端答案，不会看到「拒答 → 又 answer」的闪烁。
+  </p>
+  <p>
+    <strong>云端提示词的三条边界</strong>：只答注塑相关（无关问题输出固定拒答语）；资料优先，资料不足时用【通用建议】开头并提示「需现场确认」，不得编造报警代码、型号参数、厂家数据；涉及拆机、带电、高温必须提醒断电挂牌、冷却、持证操作。第一版提示词要求「资料不足就拒答」，结果「螺杆磨损」这种领域相关但手册没写的问题也被拒；后来改成「只有完全无关才拒答，领域相关问题允许通用建议」，才达到设计目的。
+  </p>
+  <p>
+    <strong>隐私边界</strong>：本地路径问题、检索、生成全在本机；云端路径只发送「用户问题 + 检索到的片段（仅本地判断资料不足时）」，不上传整个知识库或文档原文件；无命中直接上云时只发送问题本身。<code>ROUTE_MODE=kb_only</code> 可完全禁用云端。
+  </p>
+
+  <h2 data-sec="4.5">4.5 确定性故障诊断状态机</h2>
+  <p>
+    大模型做多轮追问很自然，但安全敏感场景有三个硬约束：<strong>安全</strong>（电气、高温检查顺序错了可能伤人，第一步必须是安全确认）、<strong>可审计</strong>（处置单每步为什么问、依据哪本手册哪一节必须固定可查）、<strong>可复现</strong>（同一症状同样回答应得到同样结论）。因此流程控制交给确定性状态机，自然语言解释留给问答模块。
+  </p>
+  <p>
+    整条链写在 <code>_TOPICS</code> 字典里：每个节点有题干、提示、手册依据 <code>basis</code>、选项；选项的 <code>next</code> 指向下一节点，带 <code>conclusion:</code> 前缀表示直接到结论。当前主题「料筒温度异常 A-101」包含 <strong>12 个节点、11 个结论</strong>，覆盖单区降温、温度波动、局部过热、多区同时下降四类现象，并配有「电阻测量方法」「端子检查方法」等操作指引节点，用户选「不会测」时先给方法再回到原问题。
+  </p>
+  <pre>安全确认 → 现象判断 → 加热圈电阻 → 接线端子 → 热电偶比对 → 固态继电器 → 结论
+              ├─ 温度波动 → 传感器检查 → SSR 测试
+              ├─ 局部过热 → 过热来源判断
+              └─ 多区下降 → 供电检查
+每个节点：题干 + 提示 + 手册依据（文档名/编号/章节/原文）+ 选项（safe/warn/danger）
+每个选项：next 节点或 conclusion；带 conclusion 时生成报告</pre>
+  <p>
+    会话存在内存字典并加锁，每条 2 小时 TTL；<code>history</code> 是栈，回退时弹出最后一条并把当前节点指回该节点，同时清空结论和报告，避免残留旧分支。报告编号格式 <code>CZ-YYYYMMDD-XXXXXX</code>，日期便于和设备科纸质单对应，随机后缀避免同一天重号。
+  </p>
+
+  <h2 data-sec="4.6">4.6 MCP 工具化与安全可控</h2>
+  <p>
+    知识库检索封装为 MCP Server（stdio），暴露两个工具：<code>search_knowledge(query, top_k=4)</code> 返回 JSON（<code>query/max_score/min_sim/has_relevant/hits</code>，hits 含文档名、编号、类别、章节、分数、原文）；<code>list_documents()</code> 返回文档数量与清单。工具描述明确写「<code>has_relevant=false</code> 时不要编造答案」，把拒答约束传给调用方。
+  </p>
+  <p>
+    选择 stdio 而非远程 HTTP：零端口、零鉴权，适合本机/内网 Agent；工具只读，不提供导入/删除，避免外部 Agent 误删知识库；返回值不含密钥、路径与模型配置。若要远程共享，需要额外的鉴权、多租户与限流层，当前不做。
+  </p>
+  <p>
+    <strong>安全与可控</strong>还体现在：提示词禁止编造报警代码/参数；云端只处理低置信问题；拒答时来源置空；MCP 只读；密钥只在 <code>.env</code>；诊断处置单明确写「处置前请由设备主管复核」，系统定位是辅助排查而非替代设备科。
+  </p>
+</section>
+
+<!-- ================= 5 功能实现 ================= -->
+<section class="chapter">
+  <h1><span class="no">CHAPTER 05</span>功能实现</h1>
+
+  <h2 data-sec="5.1">5.1 问答界面与引用展示</h2>
+  <p>
+    问答页由三部分组成：中间对话流、右侧链路监视、底部输入区。空状态给 4 个示例问题（开机检查、温度异常、飞边、触电应急），点一下直接提问。回答流式出现时，右侧实时显示检索最高分、阈值、路由决定、首字与总耗时、来源数量；生成结束后把最后一条用户消息对齐到视野顶部，避免引用卡片把答案顶出屏幕。
+  </p>
+  <figure>
+    <img src="assets/chat-local.png" alt="本地问答界面" />
+    <figcaption>图 5-1　本地问答：top-1 0.78 ≥ 阈值 0.60，绿色「本地模型」标签，答案下方为可展开的引用卡片</figcaption>
+  </figure>
+  <p>
+    引用卡片展示序号、文档名、文档编号、类别、章节路径、相似度与原文片段。正文里的 <code>[1]</code> 由 Markdown 渲染为可点击标记，点击后滚动到对应卡片并高亮；引用编号与提示词编号同源生成，前端不做字符串匹配。引用卡片展示前会去掉 Markdown 的井号、加粗星号等标记，保证原文摘录可读。
+  </p>
+
+  <h2 data-sec="5.2">5.2 路由可视化与错误处理</h2>
+  <figure>
+    <img src="assets/chat-cloud.png" alt="云端升级界面" />
+    <figcaption>图 5-2　云端升级：本地资料不足后自动切换 DeepSeek，标签变蓝，右侧写明切换原因与「通用建议」性质</figcaption>
+  </figure>
+  <p>
+    SSE 事件顺序为 <code>meta → route? → delta → done</code>，失败时发 <code>error</code>。<code>meta</code> 带初始路由、模型、分数、阈值与来源；<code>route</code> 仅在切换云端时出现；<code>done</code> 重发完整答案，前端用它覆盖增量，避免网络分块造成漏字。生成中可点「停止」，通过 <code>AbortController</code> 中止并提示「以上内容可能不完整」。云端失败不会静默吞掉：非流式回退本地拒答并带 <code>cloud_error</code>，流式发 <code>error</code> 卡片。
+  </p>
+
+  <h2 data-sec="5.3">5.3 故障排查与处置单</h2>
+  <p>
+    诊断页左侧是步骤轴（已完成打勾、当前高亮），中间是问题卡（题干、提示、选项色条、可折叠手册依据），右侧是进度。支持「上一步」回退；完成态渲染处置单：报告编号、设备、现象、逐步过程表、结论等级、处置建议、安全提示、引用清单与签字栏。打印样式在 <code>@media print</code> 下切白底黑字，<code>@page</code> 定义 A4，处置单自身 14mm 内边距，表格行 <code>break-inside: avoid</code>；已用 Chrome <code>Page.printToPDF</code> 实测两页无裁切。网页、打印、Markdown 三种形态由同一份结构化报告生成。
+  </p>
+  <figure>
+    <img class="tall" src="assets/diag-report-print.png" alt="A4 处置单" />
+    <figcaption>图 5-3　处置单打印视图：结论、排查过程、处置建议、安全提示与 6 条手册依据</figcaption>
+  </figure>
+
+  <h2 data-sec="5.4">5.4 知识库管理与检索测试台</h2>
+  <p>
+    知识库页展示文档数、切片数、类别数与当前阈值；文档表含编号、标题、类别、版本、切片数、导入时间与操作。支持全量导入、重建索引、上传 <code>.md/.txt</code>、删除（二次确认，源文件移入 <code>.trash</code>）。检索测试台输入问题后展示 top-4 片段、相似度与是否过阈值，演示时可现场改问题观察分数变化。
+  </p>
+  <figure>
+    <img src="assets/kb-manage.png" alt="知识库管理" />
+    <figcaption>图 5-4　知识库管理：统计卡、文档清单、导入/重建入口与检索测试台</figcaption>
+  </figure>
+
+  <h2 data-sec="5.5">5.5 SSE 协议与工程结构</h2>
+  <table>
+    <thead><tr><th style="width:12%">事件</th><th style="width:20%">时机</th><th>字段</th></tr></thead>
+    <tr><td><code>meta</code></td><td>检索完成、生成前</td><td><code>route/route_reason/model/max_score/min_sim/refused/grounded/sources[]</code></td></tr>
+    <tr><td><code>route</code></td><td>本地切云端</td><td>新 <code>route/route_reason/model/grounded/sources</code></td></tr>
+    <tr><td><code>delta</code></td><td>每小段生成</td><td><code>content</code></td></tr>
+    <tr><td><code>done</code></td><td>生成结束</td><td><code>answer/route/model/refused/grounded/sources</code></td></tr>
+    <tr><td><code>error</code></td><td>检索或生成失败</td><td><code>message</code></td></tr>
+  </table>
+  <pre>backend/
+  app/
+    main.py             FastAPI 入口、/health、静态前端托管
+    config.py           .env 读取、路径解析、阈值与路由参数
+    routers/            kb.py / chat.py / diag.py
+    services/           chunking.py / embeddings.py / kb.py / chat.py / cloud.py / diagnosis.py
+  mcp_server.py         MCP stdio Server
+  scripts/              calibrate.py / acceptance_routes.py / test_mcp_client.py
+frontend/src/
+  App.vue               外壳、导航、健康状态、KeepAlive
+  components/           ChatView / DiagnosisView / KnowledgeView / SourceCard / RouteBadge / Icon
+  lib/                  api.ts（含 SSE 解析）/ types.ts / markdown.ts
+  style.css             设计令牌与基础组件</pre>
+</section>
+
+<!-- ================= 6 测试与部署 ================= -->
+<section class="chapter">
+  <h1><span class="no">CHAPTER 06</span>测试与部署</h1>
+
+  <h2 data-sec="6.1">6.1 测试方法与功能验收</h2>
+  <p>
+    测试采用「接口脚本 + 浏览器真实交互」两条线：脚本负责可复现的数值与事件序列（写入 <code>docs/evidence/</code>），浏览器负责界面、流式、引用点击、打印版式等体验验收（headless Chrome CDP 截图与 PDF）。环境为 Windows 11、Ollama 本地 Qwen2.5-7B q4_K_M + bge-m3、FastAPI 127.0.0.1:8000、知识库 15 份文档 / 123 切片、阈值 0.6。
+  </p>
+  <table>
+    <thead><tr><th style="width:22%">验收项</th><th>标准</th><th style="width:12%" class="c">结果</th><th style="width:24%">证据</th></tr></thead>
+    <tr><td>本地问答</td><td>答案正确，出处对得上</td><td class="c ok">通过</td><td>top-1 0.7833；引用 EQ-OP-001/003、PM-D-001</td></tr>
+    <tr><td>无依据拒答</td><td>知识库没有的问题必须拒答</td><td class="c ok">通过</td><td>0.4242 &lt; 0.6；<code>refused=true</code>，来源空</td></tr>
+    <tr><td>故障诊断链</td><td>完整走完并生成处置单</td><td class="c ok">通过</td><td>6 步；报告 CZ-20261105-070AF4；A4 两页</td></tr>
+    <tr><td>端云路由</td><td>一易一难触发两种路径并标注</td><td class="c ok">通过</td><td>本地 0.7833；云端 0.6589 触发 <code>route→cloud</code></td></tr>
+    <tr><td>MCP</td><td>客户端调用成功并返回结果</td><td class="c ok">通过</td><td><code>max_score=0.8078</code>，15 份文档</td></tr>
+    <tr><td>公网部署</td><td>外网可访问并完成自测</td><td class="c pending">待服务器</td><td>本地生产态已通过；脚本与文档就绪</td></tr>
+  </table>
+
+  <h2 data-sec="6.2">6.2 关键实验数据</h2>
+  <p><strong>阈值校准</strong>：正向 15 条最低 0.675 / 平均 0.754；负向 8 条最高 0.522 / 平均 0.378；灰区 7 条 0.436～0.617；最终 0.6。</p>
+  <table>
+    <thead><tr><th style="width:14%">路径</th><th style="width:32%">问题</th><th class="c" style="width:10%">top-1</th><th>结果</th></tr></thead>
+    <tr><td>本地</td><td>注塑机开机前需要检查什么？</td><td class="c">0.7833</td><td>本地作答，首字约 1.0 s，引用 3 份文档</td></tr>
+    <tr><td>云端升级</td><td>注塑机螺杆磨损到什么程度必须更换？</td><td class="c">0.6589</td><td>本地拒答 → 切 <code>deepseek-chat</code>，首字约 3.3 s，标【通用建议】</td></tr>
+    <tr><td>拒答</td><td>如何做红烧肉？</td><td class="c">0.4242</td><td><code>refused=true</code>，<code>sources=[]</code>，不列出处</td></tr>
+  </table>
+  <p><strong>诊断链路</strong>：安全确认 → 现象判断 → 加热圈电阻（35～45 Ω 正常）→ 接线端子（干净紧固）→ 热电偶比对（±3 ℃ 内）→ 固态继电器（不导通），结论「固态继电器（SSR）损坏，需更换」，6 条依据全部来自 FC-T-001，报告编号 CZ-20261105-070AF4。</p>
+  <p><strong>MCP</strong>：官方客户端 <code>list_tools</code> 发现 2 个工具；<code>search_knowledge("料筒温度异常怎么排查", top_k=3)</code> 返回 <code>has_relevant=True</code>、<code>max_score=0.8078</code>，top-3 均命中 FC-T-001；<code>list_documents</code> 返回 15 份。</p>
+
+  <h2 data-sec="6.3">6.3 性能与部署</h2>
+  <p>
+    开发机 GPU 环境下生成速度约 63.8 tok/s；本地热态首字 0.25–1.0 s，完整回答 4.3–6.5 s；云端首字 2.35–3.3 s；检索热态约 0.5 s。首次加载模型需 10～30 s，模型以 <code>keep_alive=30m</code> 常驻。
+  </p>
+  <p>
+    部署形态：Nginx 监听 80/443，反向代理到 <code>127.0.0.1:8000</code>；FastAPI 托管前端 <code>dist</code>，并连接本机 Ollama 与 Chroma。<code>deploy/setup.sh</code> 负责首次初始化（apt 依赖、Node 20、运行用户、venv、构建、systemd、Nginx），<code>deploy/deploy.sh</code> 负责日常更新（<code>git pull --ff-only</code> → 依赖 → 构建 → 重启 → 健康检查）。Nginx 必须设置 <code>proxy_buffering off</code>、<code>proxy_cache off</code>、<code>X-Accel-Buffering: no</code>，否则 SSE 会退化成一次性返回。
+  </p>
+  <table>
+    <thead><tr><th style="width:26%">配置项</th><th>值 / 说明</th></tr></thead>
+    <tr><td>后端进程</td><td>systemd <code>workshop-qa.service</code>，<code>--workers 1</code>（诊断会话在内存）</td></tr>
+    <tr><td>监听地址</td><td>后端仅 <code>127.0.0.1:8000</code>，外网必须经 Nginx</td></tr>
+    <tr><td>密钥</td><td><code>backend/.env</code>，权限 600，属主 <code>workshop</code>，不入库</td></tr>
+    <tr><td>HTTPS</td><td>有域名时 certbot + nginx 插件；国内服务器需备案</td></tr>
+    <tr><td>运行用户</td><td><code>workshop</code>（无登录 shell），数据目录同属主</td></tr>
+  </table>
+
+  <h2 data-sec="6.4">6.4 安全清单与已知限制</h2>
+  <table>
+    <thead><tr><th style="width:56%">安全项</th><th class="c" style="width:12%">状态</th><th>说明</th></tr></thead>
+    <tr><td>密钥只在 .env，仓库只有 .env.example</td><td class="c ok">已落实</td><td>代码不写默认 Key；部署脚本 chmod 600</td></tr>
+    <tr><td>上传文件名去路径，防目录穿越</td><td class="c ok">已落实</td><td>只接受 .md/.txt，UTF-8 解码</td></tr>
+    <tr><td>删除文档移入 .trash</td><td class="c ok">已落实</td><td>避免误删不可恢复</td></tr>
+    <tr><td>MCP 工具只读</td><td class="c ok">已落实</td><td>不提供导入/删除</td></tr>
+    <tr><td>云端只发问题与必要片段</td><td class="c ok">已落实</td><td>kb_only 可完全禁用</td></tr>
+    <tr><td>公网访问鉴权 / 速率限制</td><td class="c pending">未做</td><td>演示阶段开放；正式给工厂用需登录/白名单与 Nginx limit_req</td></tr>
+  </table>
+  <p><strong>已知限制</strong>：</p>
+  <ul>
+    <li>诊断只做了「料筒温度异常」一个主题；引擎可复用，其余主题是往 <code>_TOPICS</code> 加数据；</li>
+    <li>诊断会话在进程内存，重启丢失，不支持多副本；扩容需迁 Redis；</li>
+    <li>拒答判断依赖模型遵循固定拒答语，换模型需回归测试；</li>
+    <li>未做 rerank；知识库上千后应加 cross-encoder 重排；</li>
+    <li>校准样本 30 条，换一批文档需重跑 <code>calibrate.py</code>；</li>
+    <li>公网部署、HTTPS、访问鉴权待服务器信息到位后完成。</li>
+  </ul>
+</section>
+
+<!-- ================= 7 总结 ================= -->
+<section class="chapter">
+  <h1><span class="no">CHAPTER 07</span>总结与展望</h1>
+
+  <h2 data-sec="7.1">7.1 完成情况</h2>
+  <p>
+    作品已完成知识库与 RAG 问答、两层拒答、端云协同路由、故障排查状态机与处置单、MCP 工具封装、三视图前端与本地生产态部署验证。任务书要求的核心功能全部打通并有实测留痕；公网部署因缺少服务器信息暂缓，部署脚本、systemd/Nginx 配置与自测清单已准备完毕。
+  </p>
+
+  <h2 data-sec="7.2">7.2 技术创新点与应用创新点</h2>
+  <h3>技术创新点</h3>
+  <ol>
+    <li><strong>可校准的两层拒答 + 缓冲式路由</strong>：用 30 条问句实测出 0.6 阈值，检索层与生成层分工；本地拒答先缓冲，确认升级云端后才发 <code>route</code> 事件，避免界面「拒答又变答案」的闪烁。这条链路在常见 RAG 演示中较少见，且可复现。</li>
+    <li><strong>确定性工作流与生成式问答分工</strong>：安全敏感的排查路径交给状态机，自然语言解释交给 RAG；同一输入得到同一结论，每步有手册依据，输出结构化处置单。相比「让大模型自由追问」，更可审计、可追责。</li>
+    <li><strong>知识库能力的 MCP 化</strong>：检索与文档清单封装为标准 MCP 工具，工具描述携带拒答约束，可被 Claude Desktop、IDE 等客户端复用，而不是锁死在网页里。</li>
+    <li><strong>端到端可溯源</strong>：引用编号与 <code>sources.index</code> 同源生成，前端按 index 映射；路由原因、检索分数、耗时全部可见，演示时每个结论都能落到证据。</li>
+  </ol>
+  <h3>应用创新点</h3>
+  <ol>
+    <li><strong>数据不出厂的 AI 助手</strong>：本地优先 + 云端兜底，回应了工厂对设备参数、工艺数据外泄的核心顾虑；断网时本地问答仍可用。</li>
+    <li><strong>把「老师傅经验」变成可查流程</strong>：故障案例卡 + 状态机 + 处置单，让新人有路径可走，让老师傅的判断标准沉淀为可审计的记录。</li>
+    <li><strong>面向一线的界面</strong>：深色高对比、大字号、少层级、手机可用；引用可点开、路径有标签，不用理解「RAG」「向量」也能用。</li>
+    <li><strong>低成本可复制</strong>：单台带 GPU 的工控机/服务器即可运行，模型量化后 4.7 GB；部署脚本与文档齐备，便于其他车间复制。</li>
+  </ol>
+
+  <h2 data-sec="7.3">7.3 不足与展望</h2>
+  <p>
+    当前版本的不足主要在覆盖广度与生产化：只做了一条诊断链，未做多设备类型；没有登录与权限，公网演示阶段靠网络边界；会话存在内存，不能多副本；未做 rerank 与答案逐句校验。下一步计划：
+  </p>
+  <ul>
+    <li>把顶出、液压、模具保护等主题按同一引擎补进 <code>_TOPICS</code>，形成注塑机故障图谱；</li>
+    <li>诊断会话迁 Redis，支持多副本与断点续查；</li>
+    <li>检索加 cross-encoder 重排，文档上千后保持 top-4 精度；</li>
+    <li>增加登录、角色与审计日志，满足工厂正式上线的权限要求；</li>
+    <li>在服务器到位后完成公网部署、HTTPS 与外网自测；</li>
+    <li>探索拍照 + 云端 VL 的多模态入口，但坚持「本地优先、图片不出厂除非用户确认」。</li>
+  </ul>
+  <div class="callout">
+    <b>一句话总结：</b>车间智答不是「让大模型什么都答」，而是让它在正确的资料、正确的路径和正确的边界内作答；答不了就明确说答不了，并把判断依据留给用户复核。
+  </div>
+</section>
+
+<!-- ================= 附录 A ================= -->
+<section class="chapter">
+  <h1><span class="no">APPENDIX A</span>附录 A　AI 生成代码说明</h1>
+  <p>
+    按赛事要求，如实说明 AI 在作品开发中的参与范围。本项目在开发过程中使用了 AI 编程助手 <strong>Claude Code</strong> 辅助生成代码、示例知识库文档与文档初稿；运行时的 Qwen2.5 与 DeepSeek 是产品功能的一部分，不参与代码生成。
+  </p>
+  <h2>A.1 使用原则</h2>
+  <ul>
+    <li>需求、技术选型、验收标准由团队确定；AI 负责起草实现，团队逐模块运行、审查、提出修改；</li>
+    <li>AI 生成内容不直接视为正确：每个接口、每条诊断分支、每个前端交互都经过实际运行与验收；</li>
+    <li>密钥、账号、服务器信息不交给 AI 生成或保存；仓库只保留 <code>.env.example</code>；</li>
+    <li>示例知识库为围绕注塑机自编的演示数据，数值为行业常识范围内的合理值，不来自真实工厂，也不抄网上现成手册。</li>
+  </ul>
+  <h2>A.2 分模块说明</h2>
+  <table>
+    <thead><tr><th style="width:22%">模块</th><th style="width:38%">AI 参与</th><th>人工工作</th></tr></thead>
+    <tr><td>切分 / 向量化 / 检索</td><td>生成切分、入库、检索代码初稿</td><td>确定标题栈、600/80 参数；跑 30 条校准；修正空索引 <code>min_sim</code> 缺陷</td></tr>
+    <tr><td>RAG 生成 / 拒答</td><td>生成提示词、流式生成、引用组装初稿</td><td>实测本地/拒答用例；调整拒答语与来源置空逻辑</td></tr>
+    <tr><td>端云路由</td><td>生成路由、云端调用、缓冲拒答初稿</td><td>实测两种路径；第一版云端提示词过严，团队发现后改为「通用建议」边界</td></tr>
+    <tr><td>诊断状态机</td><td>生成节点数据、会话、报告与 Markdown 初稿</td><td>按 FC-T-001 核对 12 节点/11 结论；走完整链；验证回退与 A4 打印</td></tr>
+    <tr><td>前端三视图</td><td>生成 Vue 组件、设计令牌、SSE 解析初稿</td><td>浏览器逐页验收；修复自动滚动遮答案、拒答标签、引用 Markdown 符号、打印裁切</td></tr>
+    <tr><td>MCP Server</td><td>生成工具封装与客户端验收脚本</td><td>升级 MCP 2.x 解决依赖冲突；用官方客户端实测调用</td></tr>
+    <tr><td>示例文档</td><td>生成 15 份注塑机文档初稿</td><td>检查数值、步骤、安全提示的一致性；确保不抄现成手册</td></tr>
+    <tr><td>部署脚本</td><td>生成 setup/deploy/systemd/Nginx/说明初稿</td><td>Bash 语法检查；本地生产态单端口验证；公网执行待服务器</td></tr>
+    <tr><td>设计说明 / 本文档 / 视频脚本</td><td>生成初稿与排版</td><td>团队复核事实与数据；替换队伍信息；对最终内容负责</td></tr>
+  </table>
+  <h2>A.3 人工验证方式</h2>
+  <p>
+    每个模块完成后执行对应验收：RAG 用「可回答问题 + 无关问题」实测；路由用「易/难」两问并检查 SSE 事件序列；诊断从安全确认走到结论并打印 PDF；MCP 用官方客户端 <code>list_tools</code> 与调用；前端用 headless Chrome 截图与 390×844 移动端检查。原始结果保存在 <code>docs/evidence/</code>，汇总在 <code>docs/acceptance.md</code>。
+  </p>
+  <h2>A.4 责任声明</h2>
+  <p>
+    团队对作品的全部代码、文档、示例数据与演示内容负责。AI 是开发工具，不替代团队的设计判断、测试与答辩解释；文档中的技术决策、参数与实测数据均可由仓库脚本复现。若评审需要，团队可说明任一模块的生成过程与人工修改点。
+  </p>
+</section>
+
+<!-- ================= 附录 B ================= -->
+<section class="chapter">
+  <h1><span class="no">APPENDIX B</span>附录 B　复现与接口</h1>
+  <h2>B.1 本地启动</h2>
+  <pre># 1) 本地模型
+ollama pull qwen2.5:7b-instruct-q4_K_M
+ollama pull bge-m3
+
+# 2) 后端
+cd backend
+python -m venv .venv
+.venv/Scripts/pip install -r requirements.txt      # Linux: .venv/bin/pip
+cp ../.env.example .env                             # 填 DEEPSEEK_API_KEY（可选）
+.venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+# 3) 前端（开发）
+cd frontend && npm ci && npm run dev                # http://localhost:5173
+
+# 4) 生产态（单端口）
+cd frontend && npm run build
+cd ../backend && .venv/Scripts/python -m uvicorn app.main:app --port 8000
+# 打开 http://127.0.0.1:8000/</pre>
+  <h2>B.2 验收命令</h2>
+  <pre># 导入知识库
+curl -X POST http://127.0.0.1:8000/api/kb/import
+
+# 30 条阈值校准
+backend/.venv/Scripts/python.exe backend/scripts/calibrate.py
+
+# 路由三路径 + 诊断链路（写入 docs/evidence/）
+backend/.venv/Scripts/python.exe backend/scripts/acceptance_routes.py
+
+# MCP 客户端
+backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py</pre>
+  <h2>B.3 API 摘要</h2>
+  <table>
+    <thead><tr><th style="width:34%">方法 / 路径</th><th>说明</th></tr></thead>
+    <tr><td><code>GET /health</code></td><td>模型、阈值、路由模式、前端构建状态</td></tr>
+    <tr><td><code>POST /api/kb/import</code></td><td>导入 <code>data/docs</code>；<code>?rebuild=true</code> 全量重建</td></tr>
+    <tr><td><code>POST /api/kb/search</code></td><td>向量检索：片段、分数、<code>has_relevant</code></td></tr>
+    <tr><td><code>POST /api/chat/stream</code></td><td>SSE：<code>meta → route? → delta → done/error</code></td></tr>
+    <tr><td><code>GET /api/diag/topics</code></td><td>诊断主题列表</td></tr>
+    <tr><td><code>POST /api/diag/sessions</code></td><td>开始诊断会话</td></tr>
+    <tr><td><code>POST /api/diag/sessions/{id}/answer</code></td><td>提交当前步骤选择</td></tr>
+    <tr><td><code>GET /api/diag/sessions/{id}/report.md</code></td><td>下载 Markdown 处置单</td></tr>
+  </table>
+  <h2>B.4 主要环境变量</h2>
+  <table>
+    <thead><tr><th style="width:30%">变量</th><th style="width:26%">默认</th><th>说明</th></tr></thead>
+    <tr><td><code>LLM_MODEL</code></td><td>qwen2.5:7b-instruct-q4_K_M</td><td>本地生成模型</td></tr>
+    <tr><td><code>EMBED_MODEL</code></td><td>bge-m3</td><td>向量模型</td></tr>
+    <tr><td><code>RETRIEVAL_MIN_SIM</code></td><td>0.6</td><td>拒答阈值</td></tr>
+    <tr><td><code>ROUTE_MODE</code></td><td>auto</td><td>auto 允许云端；kb_only 严格本地</td></tr>
+    <tr><td><code>DEEPSEEK_API_KEY</code></td><td>空</td><td>只填在 <code>backend/.env</code></td></tr>
+    <tr><td><code>DEEPSEEK_MODEL</code></td><td>deepseek-chat</td><td>云端模型</td></tr>
+  </table>
+  <p class="small">完整设计说明见仓库 <code>docs/</code>：chunking / retrieval / rag-generation / routing / diagnosis / mcp / frontend / deployment；逐项验收见 <code>docs/acceptance.md</code>。</p>
+</section>
+
+</body>
+</html>
