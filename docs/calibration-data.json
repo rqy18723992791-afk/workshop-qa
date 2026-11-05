@@ -1,0 +1,456 @@
+{
+  "generated_by": "backend/scripts/calibrate.py",
+  "current_threshold": 0.5,
+  "top_k": 4,
+  "summary": {
+    "positive": {
+      "count": 15,
+      "min": 0.6752,
+      "avg": 0.7537,
+      "max": 0.8174
+    },
+    "negative": {
+      "count": 8,
+      "min": 0.2369,
+      "avg": 0.3776,
+      "max": 0.5219
+    },
+    "gray": {
+      "count": 7,
+      "min": 0.4355,
+      "avg": 0.5749,
+      "max": 0.6173
+    },
+    "recommended_threshold": 0.599,
+    "safe_band": [
+      0.5219,
+      0.6752
+    ],
+    "recommended_positive_pass": 15,
+    "recommended_negative_pass": 0,
+    "best_accuracy_threshold": 0.522,
+    "best_accuracy": 1.0
+  },
+  "queries": [
+    {
+      "label": "positive",
+      "query": "注塑机开机前需要检查什么",
+      "max_score": 0.7834,
+      "has_relevant_at_current": true,
+      "top1_doc": "EQ-OP-001",
+      "top1_heading": "二、开机前检查（每班首次开机必须逐项确认）",
+      "scores": [
+        0.7834,
+        0.7561,
+        0.7306,
+        0.7286
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "注塑机正常停机步骤",
+      "max_score": 0.7914,
+      "has_relevant_at_current": true,
+      "top1_doc": "EQ-OP-001",
+      "top1_heading": "五、正常停机",
+      "scores": [
+        0.7914,
+        0.7677,
+        0.7146,
+        0.7128
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "料筒温度异常怎么排查",
+      "max_score": 0.8078,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-T-001",
+      "top1_heading": "三、排查步骤",
+      "scores": [
+        0.8078,
+        0.7784,
+        0.7544,
+        0.7533
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "顶针不复位怎么处理",
+      "max_score": 0.7487,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-E-001",
+      "top1_heading": "三、排查步骤",
+      "scores": [
+        0.7487,
+        0.7293,
+        0.7172,
+        0.6983
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "液压系统压力低是什么原因",
+      "max_score": 0.7199,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-H-001",
+      "top1_heading": "二、可能原因（按发生概率排序）",
+      "scores": [
+        0.7199,
+        0.7031,
+        0.689,
+        0.6819
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "模具保护报警 A-402 怎么排查",
+      "max_score": 0.7923,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-M-001",
+      "top1_heading": "三、排查步骤",
+      "scores": [
+        0.7923,
+        0.7475,
+        0.7347,
+        0.7255
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "产品飞边怎么调整工艺",
+      "max_score": 0.6906,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-Q-001",
+      "top1_heading": "五、处置措施",
+      "scores": [
+        0.6906,
+        0.6791,
+        0.6598,
+        0.6388
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "产品缩水怎么解决",
+      "max_score": 0.6755,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-Q-001",
+      "top1_heading": "三、缩水的可能原因",
+      "scores": [
+        0.6755,
+        0.6448,
+        0.6372,
+        0.617
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "注塑机日常点检有哪些项目",
+      "max_score": 0.7717,
+      "has_relevant_at_current": true,
+      "top1_doc": "PM-D-001",
+      "top1_heading": "",
+      "scores": [
+        0.7717,
+        0.7469,
+        0.7457,
+        0.7445
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "注塑机月保养做什么",
+      "max_score": 0.748,
+      "has_relevant_at_current": true,
+      "top1_doc": "PM-M-001",
+      "top1_heading": "",
+      "scores": [
+        0.748,
+        0.7325,
+        0.73,
+        0.7171
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "PP 料筒温度设定多少",
+      "max_score": 0.7392,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-T-001",
+      "top1_heading": "一、故障现象",
+      "scores": [
+        0.7392,
+        0.6891,
+        0.6798,
+        0.6787
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "注塑机锁模区域安全要求",
+      "max_score": 0.8091,
+      "has_relevant_at_current": true,
+      "top1_doc": "SA-L-001",
+      "top1_heading": "",
+      "scores": [
+        0.8091,
+        0.7763,
+        0.7712,
+        0.7473
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "注塑车间触电怎么应急处理",
+      "max_score": 0.8174,
+      "has_relevant_at_current": true,
+      "top1_doc": "SA-E-001",
+      "top1_heading": "四、触电",
+      "scores": [
+        0.8174,
+        0.7414,
+        0.7216,
+        0.714
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "加热圈正常电阻是多少",
+      "max_score": 0.6752,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-T-001",
+      "top1_heading": "四、本次处置结果",
+      "scores": [
+        0.6752,
+        0.6275,
+        0.5928,
+        0.5857
+      ]
+    },
+    {
+      "label": "positive",
+      "query": "保压压力和时间怎么设定",
+      "max_score": 0.7359,
+      "has_relevant_at_current": true,
+      "top1_doc": "PR-P-001",
+      "top1_heading": "三、保压参数",
+      "scores": [
+        0.7359,
+        0.7043,
+        0.6884,
+        0.6673
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "如何做红烧肉",
+      "max_score": 0.4361,
+      "has_relevant_at_current": false,
+      "top1_doc": "FC-T-001",
+      "top1_heading": "三、排查步骤",
+      "scores": [
+        0.4361,
+        0.4333,
+        0.4163,
+        0.4057
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "今天上海天气怎么样",
+      "max_score": 0.3985,
+      "has_relevant_at_current": false,
+      "top1_doc": "PR-M-001",
+      "top1_heading": "二、温度与工艺参数对照表",
+      "scores": [
+        0.3985,
+        0.3981,
+        0.393,
+        0.3855
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "帮我写一首关于春天的诗",
+      "max_score": 0.2965,
+      "has_relevant_at_current": false,
+      "top1_doc": "FC-Q-001",
+      "top1_heading": "五、处置措施",
+      "scores": [
+        0.2965,
+        0.2956,
+        0.2943,
+        0.2863
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "2026 年世界杯冠军是谁",
+      "max_score": 0.2369,
+      "has_relevant_at_current": false,
+      "top1_doc": "PR-P-001",
+      "top1_heading": "六、锁模力设定",
+      "scores": [
+        0.2369,
+        0.23,
+        0.2227,
+        0.2156
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "Python 怎么读取 Excel 文件",
+      "max_score": 0.3941,
+      "has_relevant_at_current": false,
+      "top1_doc": "PM-D-001",
+      "top1_heading": "二、班前点检项目",
+      "scores": [
+        0.3941,
+        0.3842,
+        0.3826,
+        0.3824
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "推荐一部好看的科幻电影",
+      "max_score": 0.3036,
+      "has_relevant_at_current": false,
+      "top1_doc": "FC-Q-001",
+      "top1_heading": "",
+      "scores": [
+        0.3036,
+        0.3029,
+        0.2881,
+        0.2807
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "我的手机屏幕碎了怎么办",
+      "max_score": 0.5219,
+      "has_relevant_at_current": true,
+      "top1_doc": "FC-M-001",
+      "top1_heading": "三、排查步骤",
+      "scores": [
+        0.5219,
+        0.504,
+        0.5035,
+        0.5019
+      ]
+    },
+    {
+      "label": "negative",
+      "query": "股票行情怎么分析",
+      "max_score": 0.4334,
+      "has_relevant_at_current": false,
+      "top1_doc": "PR-P-001",
+      "top1_heading": "八、参数调试推荐顺序",
+      "scores": [
+        0.4334,
+        0.4116,
+        0.4057,
+        0.4023
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "注塑机多少钱一台",
+      "max_score": 0.6071,
+      "has_relevant_at_current": true,
+      "top1_doc": "EQ-OP-002",
+      "top1_heading": "三、压力与速度设定",
+      "scores": [
+        0.6071,
+        0.5906,
+        0.5848,
+        0.5821
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "注塑机螺杆磨损到什么程度必须更换",
+      "max_score": 0.6173,
+      "has_relevant_at_current": true,
+      "top1_doc": "PM-W-001",
+      "top1_heading": "二、机械部分",
+      "scores": [
+        0.6173,
+        0.6171,
+        0.6121,
+        0.6099
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "海天和震雄注塑机哪个好",
+      "max_score": 0.4355,
+      "has_relevant_at_current": false,
+      "top1_doc": "EQ-OP-002",
+      "top1_heading": "四、位置与时间设定",
+      "scores": [
+        0.4355,
+        0.4096,
+        0.4074,
+        0.4062
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "注塑机品牌排行榜",
+      "max_score": 0.5674,
+      "has_relevant_at_current": true,
+      "top1_doc": "PM-D-001",
+      "top1_heading": "",
+      "scores": [
+        0.5674,
+        0.5392,
+        0.534,
+        0.5327
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "注塑车间如何降低能耗",
+      "max_score": 0.6026,
+      "has_relevant_at_current": true,
+      "top1_doc": "EQ-OP-001",
+      "top1_heading": "五、正常停机",
+      "scores": [
+        0.6026,
+        0.5913,
+        0.5883,
+        0.5868
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "注塑机出口到欧洲需要什么认证",
+      "max_score": 0.5809,
+      "has_relevant_at_current": true,
+      "top1_doc": "PM-D-001",
+      "top1_heading": "二、班前点检项目",
+      "scores": [
+        0.5809,
+        0.561,
+        0.5592,
+        0.5559
+      ]
+    },
+    {
+      "label": "gray",
+      "query": "注塑机操作工月薪多少",
+      "max_score": 0.6133,
+      "has_relevant_at_current": true,
+      "top1_doc": "PM-M-001",
+      "top1_heading": "",
+      "scores": [
+        0.6133,
+        0.5936,
+        0.5844,
+        0.5724
+      ]
+    }
+  ]
+}
