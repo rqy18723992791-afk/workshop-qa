@@ -1,0 +1,30 @@
+# ===== 密钥与环境 =====
+.env
+*.local
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# ===== Node =====
+node_modules/
+dist/
+dist-ssr/
+*.log
+*.tsbuildinfo
+
+# ===== 运行时数据 =====
+data/chroma/
+
+# ===== IDE / 系统 =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ===== 内部文档（不随公开仓库提交）=====
+交给本地AI的任务书.md
