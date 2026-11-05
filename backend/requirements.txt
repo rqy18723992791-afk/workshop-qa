@@ -5,3 +5,5 @@ python-dotenv>=1.0
 python-multipart>=0.0.9
 ollama>=0.4
 chromadb>=1.0
+httpx>=0.28
+mcp>=2.3
