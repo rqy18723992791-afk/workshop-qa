@@ -1,0 +1,15 @@
+[11/05/26 06:20:04] INFO     HTTP Request: POST                 _client.py:1025
+                             http://localhost:11434/api/embed                  
+                             "HTTP/1.1 200 OK"                                 
+== tools ==
+- search_knowledge: 检索注塑车间知识库。
+- list_documents: 列出知识库中的文档（文档名、编号、类别、版本、切片数）。
+
+== call search_knowledge ==
+has_relevant=True max_score=0.8078
+  [0.8078] FC-T-001 三、排查步骤
+  [0.7784] FC-T-001 五、预防措施
+  [0.7544] FC-T-001 一、故障现象
+
+== call list_documents ==
+documents=15

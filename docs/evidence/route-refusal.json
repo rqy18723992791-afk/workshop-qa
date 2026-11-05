@@ -1,0 +1,20 @@
+{
+  "query": "如何做红烧肉？",
+  "route_mode": "auto",
+  "tested_at": "2026-11-05T06:19:40-05:00",
+  "route": "cloud",
+  "route_reason": "检索最高相似度 0.42 < 阈值 0.60，本地知识库覆盖不足，已升级云端",
+  "model": "deepseek-chat",
+  "max_score": 0.4242,
+  "min_sim": 0.6,
+  "refused": true,
+  "grounded": false,
+  "sources": [],
+  "answer": "知识库中暂无相关记录。",
+  "first_delta_ms": 2805,
+  "event_types": [
+    "meta",
+    "done"
+  ],
+  "switched_to_cloud": false
+}

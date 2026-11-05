@@ -182,7 +182,13 @@ def search(query: str, top_k: int | None = None) -> dict:
     collection = get_collection()
     total = collection.count()
     if total == 0:
-        return {"query": query, "hits": [], "max_score": 0.0, "has_relevant": False}
+        return {
+            "query": query,
+            "hits": [],
+            "max_score": 0.0,
+            "min_sim": config.RETRIEVAL_MIN_SIM,
+            "has_relevant": False,
+        }
 
     k = min(top_k or config.RETRIEVAL_TOP_K, total)
     result = collection.query(

@@ -1,0 +1,41 @@
+{
+  "tested_at": "2026-11-05T06:19:41-05:00",
+  "session_id": "070af48fb302",
+  "steps": [
+    {
+      "step": 1,
+      "node": "safety",
+      "title": "安全确认"
+    },
+    {
+      "step": 2,
+      "node": "symptom",
+      "title": "现象判断"
+    },
+    {
+      "step": 3,
+      "node": "heater_measure",
+      "title": "加热圈电阻"
+    },
+    {
+      "step": 4,
+      "node": "terminal_inspect",
+      "title": "接线端子"
+    },
+    {
+      "step": 5,
+      "node": "thermocouple_inspect",
+      "title": "热电偶比对"
+    },
+    {
+      "step": 6,
+      "node": "ssr_test",
+      "title": "固态继电器"
+    }
+  ],
+  "report_no": "CZ-20261105-070AF4",
+  "conclusion": "固态继电器（SSR）损坏，需更换",
+  "level": "立即处置",
+  "references": 6,
+  "process_rows": 6
+}
