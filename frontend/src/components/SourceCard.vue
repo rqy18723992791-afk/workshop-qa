@@ -7,6 +7,19 @@ const props = defineProps<{ source: Source; active?: boolean; defaultOpen?: bool
 const emit = defineEmits<{ select: [index: number] }>()
 
 const expanded = ref(Boolean(props.defaultOpen))
+
+/** 引用卡片展示纯文本：去掉标题井号、加粗/斜体星号等 Markdown 标记，避免原文符号干扰阅读 */
+const plainText = computed(() =>
+  props.source.text
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/^\s*>\s?/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim(),
+)
+
 const scoreClass = computed(() => {
   if (props.source.score >= 0.72) return 'high'
   if (props.source.score >= 0.6) return 'mid'
@@ -40,7 +53,7 @@ function toggle() {
       </div>
       <span class="src-score mono" :class="scoreClass">{{ source.score.toFixed(2) }}</span>
     </div>
-    <p class="src-text" :class="{ expanded }">{{ source.text }}</p>
+    <p class="src-text" :class="{ expanded }">{{ plainText }}</p>
     <button class="src-toggle" type="button" @click.stop="toggle">
       <Icon name="chevron-right" :size="13" :class="{ rotated: expanded }" />
       {{ expanded ? '收起原文' : '展开原文' }}
