@@ -1,0 +1,24 @@
+[Unit]
+Description=Workshop QA (车间智答) FastAPI service
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=workshop
+Group=workshop
+WorkingDirectory=/opt/workshop-qa/backend
+# 配置由 app/config.py 通过 python-dotenv 读取 backend/.env，无需 EnvironmentFile。
+# 诊断会话保存在进程内存中，因此固定单 worker；横向扩容需改为 Redis 会话。
+ExecStart=/opt/workshop-qa/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1 --proxy-headers
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=workshop-qa
+
+[Install]
+WantedBy=multi-user.target
