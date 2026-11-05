@@ -111,6 +111,8 @@ curl -X POST http://localhost:8000/api/kb/search \
 | GET | `/api/kb/documents` | 文档清单（文档名、类别、版本、切片数） |
 | DELETE | `/api/kb/documents/{doc_id}` | 删除文档索引，源文件移入 `data/docs/.trash` |
 | POST | `/api/kb/search` | 向量检索，返回片段、相似度、出处；低于阈值标记 `has_relevant=false` |
+| POST | `/api/chat` | RAG 问答（非流式），返回答案、引用来源、是否拒答 |
+| POST | `/api/chat/stream` | RAG 问答（SSE）：`meta` 来源 → `delta` 增量 → `done` |
 
 > 检索相似度为余弦相似度（`1 - 余弦距离`）。当前阈值 0.5 由 11-06 实测校准，
 > 详细依据见 [docs/chunking.md](docs/chunking.md)。
@@ -119,7 +121,7 @@ curl -X POST http://localhost:8000/api/kb/search \
 
 - [x] 11-05 仓库初始化（README 骨架 + .gitignore + .env.example），脚手架跑通
 - [x] 11-06 Ollama + 模型就绪（qwen2.5:7b + bge-m3），15 份示例文档 v1 入库（123 切片），检索接口通；实测检索阈值校准、GPU 生成速度 63.8 tok/s
-- [ ] 11-07 ~ 11-08 RAG 问答闭环（含引用与拒答）
+- [x] 11-07 RAG 问答后端闭环（检索 → 流式生成 → 引用 → 拒答）已打通并实测；11-08 前端展示与阈值精调待做
 - [ ] 11-09 ~ 11-10 前端界面成型，问答体验打磨
 - [ ] 11-11 ~ 11-12 故障排查向导 + 处置单
 - [ ] 11-13 端云路由 + MCP 封装
@@ -137,4 +139,5 @@ curl -X POST http://localhost:8000/api/kb/search \
 
 - [docs/index.md](docs/index.md) —— 核心模块设计说明索引（讲义式，答辩复习材料）
 - [docs/chunking.md](docs/chunking.md) —— 文档切分与入库设计说明
+- [docs/rag-generation.md](docs/rag-generation.md) —— RAG 问答、两层拒答与 SSE 协议设计说明
 - [data/docs/README.md](data/docs/README.md) —— 示例知识库文档规范

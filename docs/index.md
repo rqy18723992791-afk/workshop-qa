@@ -7,7 +7,7 @@
 | --- | --- | --- | --- |
 | 文档切分与入库 | ✅ 已完成 | 11-06 | [chunking.md](chunking.md) |
 | 检索与拒答策略 | 部分（阈值已校准） | 11-07 补全 | [retrieval.md](retrieval.md) |
-| RAG 问答生成（含引用） | 未开始 | 11-08 | [rag-generation.md](rag-generation.md) |
+| RAG 问答生成（含引用） | ✅ 后端完成，前端待做 | 11-08 | [rag-generation.md](rag-generation.md) |
 | 故障诊断状态机 | 未开始 | 11-12 | [diagnosis.md](diagnosis.md) |
 | 端云协同路由 | 未开始 | 11-13 | [routing.md](routing.md) |
 | MCP 工具封装 | 未开始 | 11-13 | [mcp.md](mcp.md) |

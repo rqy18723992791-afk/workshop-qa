@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
-from .routers import kb
+from .routers import chat, kb
 
 app = FastAPI(
     title="车间智答 API",
@@ -31,6 +31,7 @@ app.add_middleware(
 )
 
 app.include_router(kb.router)
+app.include_router(chat.router)
 
 
 @app.get("/health", tags=["系统"])
