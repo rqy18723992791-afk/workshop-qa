@@ -43,7 +43,11 @@
 ├── README.md               # 项目说明（本文件）
 ├── .env.example            # 环境变量模板（复制为 backend/.env 使用）
 ├── backend/                # FastAPI 后端（AI 接入层）
-│   ├── app/main.py         # 入口：/health + 路由挂载点
+│   ├── app/
+│   │   ├── main.py         # 入口：/health + 路由挂载
+│   │   ├── config.py       # 环境变量与路径配置
+│   │   ├── routers/kb.py   # 知识库 API
+│   │   └── services/       # 切分 chunking / 向量化 embeddings / 检索 kb
 │   └── requirements.txt    # Python 依赖
 ├── frontend/               # Vue 3 单页应用
 │   └── src/                # 源码
@@ -81,10 +85,40 @@ npm install
 npm run dev        # http://localhost:5173，/api 与 /health 已代理到后端 8000 端口
 ```
 
+### 4. 导入知识库并验证检索
+
+```bash
+# 扫描 data/docs 下的 15 份示例文档，切分、向量化、写入 Chroma
+curl -X POST http://localhost:8000/api/kb/import
+
+# 查看文档清单（含切片数、版本、类别）
+curl http://localhost:8000/api/kb/documents
+
+# 向量检索
+curl -X POST http://localhost:8000/api/kb/search \
+  -H "Content-Type: application/json" \
+  -d '{"query":"料筒温度异常怎么排查","top_k":3}'
+```
+
+## API 一览（后端 8000 端口）
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| GET | `/health` | 健康检查，返回模型与检索配置 |
+| POST | `/api/kb/import?rebuild=false` | 扫描 `data/docs` 增量导入（`rebuild=true` 全量重建） |
+| POST | `/api/kb/reindex` | 清空索引并全量重建 |
+| POST | `/api/kb/upload` | 上传 `.md`/`.txt`（multipart），保存到 `data/docs` 并入库 |
+| GET | `/api/kb/documents` | 文档清单（文档名、类别、版本、切片数） |
+| DELETE | `/api/kb/documents/{doc_id}` | 删除文档索引，源文件移入 `data/docs/.trash` |
+| POST | `/api/kb/search` | 向量检索，返回片段、相似度、出处；低于阈值标记 `has_relevant=false` |
+
+> 检索相似度为余弦相似度（`1 - 余弦距离`）。当前阈值 0.5 由 11-06 实测校准，
+> 详细依据见 [docs/chunking.md](docs/chunking.md)。
+
 ## 里程碑进度
 
 - [x] 11-05 仓库初始化（README 骨架 + .gitignore + .env.example），脚手架跑通
-- [ ] 11-06 Ollama + 模型就绪，示例文档 v1 入库，检索接口通
+- [x] 11-06 Ollama + 模型就绪（qwen2.5:7b + bge-m3），15 份示例文档 v1 入库（123 切片），检索接口通；实测检索阈值校准、GPU 生成速度 63.8 tok/s
 - [ ] 11-07 ~ 11-08 RAG 问答闭环（含引用与拒答）
 - [ ] 11-09 ~ 11-10 前端界面成型，问答体验打磨
 - [ ] 11-11 ~ 11-12 故障排查向导 + 处置单
@@ -102,4 +136,5 @@ npm run dev        # http://localhost:5173，/api 与 /health 已代理到后端
 ## 文档索引
 
 - [docs/index.md](docs/index.md) —— 核心模块设计说明索引（讲义式，答辩复习材料）
+- [docs/chunking.md](docs/chunking.md) —— 文档切分与入库设计说明
 - [data/docs/README.md](data/docs/README.md) —— 示例知识库文档规范

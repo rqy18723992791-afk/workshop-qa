@@ -19,6 +19,8 @@ dist-ssr/
 
 # ===== 运行时数据 =====
 data/chroma/
+data/kb_registry.json
+data/docs/.trash/
 
 # ===== IDE / 系统 =====
 .vscode/
