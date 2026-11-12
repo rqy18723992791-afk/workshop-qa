@@ -206,7 +206,7 @@ sudo bash deploy/deploy.sh
 
 ## 11. 公网部署实录（2026-11-12）
 
-**线上地址**：`http://1.14.203.217`（`workshop.runfeather.cn` 待 HTTPS 就绪后启用）。无需登录。
+**线上地址**：`https://workshop.runfeather.cn`（HTTPS 证书已签发并自动续期；备用直连 `http://1.14.203.217`）。无需登录。
 
 **服务器**：腾讯云 CVM `1.14.203.217`，Ubuntu 22.04，2 核 / 3.3 GB / 无 GPU。与 judge（3456）、library（8080）、portfolio（3000）、pet（3457）、nextchat、one-api 共存，部署时未改动任何现有服务；新增独立 systemd 单元 `workshop-qa`（用户 `workshop`）与 nginx 站点 `workshop-qa`（显式 `server_name`，不设 default_server，不抢占 IP 默认入口）。
 
