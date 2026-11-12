@@ -1,9 +1,9 @@
 # 交接文档 · 车间智答
 
-> 更新时间：2026-11-05
+> 更新时间：2026-11-12
 > 适用对象：接手的队友、指导教师、后续维护者
 > 仓库：<https://github.com/rqy18723992791-afk/workshop-qa>（公开，MIT）
-> 当前状态：**八项交付全部完成初版并验收留痕；公网演示已上线（https://workshop.runfeather.cn，2026-11-12）；视频成片、平台提交待办。**
+> 当前状态：**八项交付全部完成并验收留痕；公网演示已上线（https://workshop.runfeather.cn，2026-11-12 实测通过）；演示稿三版定稿（队伍信息占位）；视频成片、平台提交待办。**
 
 本文档只写“接手后立刻要知道的事”：怎么跑、东西在哪、哪些不能动、还差什么。设计原理看 [docs/index.md](index.md)，验收数据看 [acceptance.md](acceptance.md)。
 
@@ -22,7 +22,7 @@
 | MCP 工具封装 | ✅ 官方客户端实测通过 |
 | 工业风前端三视图 + 移动端 | ✅ 截图留痕 |
 | 技术文档 PDF（25 页） | ✅ 仓库根目录 |
-| 视频脚本（5–8 分钟） | ✅ 结构定稿，队伍信息占位 |
+| 演示稿三版（1500 / 2500 / 2000 字） | ✅ 定稿，队伍信息占位 |
 | README / LICENSE / 设计说明 / 验收记录 | ✅ 已入库 |
 | 公网部署 | ✅ 已上线 <https://workshop.runfeather.cn>（详见 [deployment.md](deployment.md) 第 11 节） |
 | 演示视频成片、平台报名提交 | ⬜ 用户侧 |
@@ -34,7 +34,7 @@
 | 事项 | 地址 / 说明 |
 | --- | --- |
 | 开源仓库 | <https://github.com/rqy18723992791-afk/workshop-qa> |
-| 在线演示 | 待部署后补；计划无需登录 |
+| 在线演示 | <https://workshop.runfeather.cn>（HTTPS，无需登录；备用 <http://1.14.203.217>） |
 | 演示视频 | 待录制后补 |
 | 技术文档 | 仓库根目录 `车间智答-技术文档.pdf` |
 | 设计说明总索引 | [docs/index.md](index.md) |
@@ -208,8 +208,8 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 | 故障排查向导 | ✅ 6 步 + A4 处置单 + Markdown | [evidence/diagnosis-session.json](evidence/diagnosis-session.json) |
 | 端云协同路由 | ✅ 三路径实测 | [route-local.json](evidence/route-local.json)、[route-cloud.json](evidence/route-cloud.json)、[route-refusal.json](evidence/route-refusal.json) |
 | MCP 封装 | ✅ 官方客户端可调用 | [evidence/mcp-test.txt](evidence/mcp-test.txt) |
-| 部署 | 🟡 本地生产态通过，公网待办 | [deployment.md](deployment.md) |
-| 材料初稿 | ✅ PDF 25 页、视频脚本、README、LICENSE | 仓库根目录 |
+| 部署 | ✅ 本地生产态 + 公网实测通过（2026-11-12） | [deployment.md](deployment.md) 第 11 节 |
+| 材料 | ✅ PDF 25 页、演示稿三版、README、LICENSE | 仓库根目录、docs/ |
 | 设计说明 | ✅ 八页讲义式文档 | [index.md](index.md) |
 
 ---
@@ -218,20 +218,17 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 | 事项 | 当前卡点 | 谁来做 | 接手步骤 |
 | --- | --- | --- | --- |
-| 公网部署 / 在线演示 | ✅ 已上线，HTTPS 证书已签发并自动续期 | 已完成 | 地址已填进 README；日常更新跑 `deploy/deploy.sh` |
-| 演示视频成片 | 需真人旁白、剪辑、队伍信息 | 用户 | 按 [video-script.md](video-script.md) 录 5–8 分钟、≥1080p |
-| 团队/学校/指导教师信息 | 用户尚未提供 | 用户 | 替换脚本与 `docs/tech-doc.html` 中 `【】` 占位，再重出 PDF |
+| 公网部署 / 在线演示 | ✅ 已完成，workshop.runfeather.cn 实测通过 | 已完成 | 运维见 [deployment.md](deployment.md) 第 11 节；日常更新跑 `deploy/deploy.sh` |
+| 演示视频成片 | 需真人旁白、剪辑、队伍信息 | 用户 | 三版稿任选：[demo-speech.md](demo-speech.md) 1500 字纯旁白 / [live-demo-script.md](live-demo-script.md) 2500 字边点边讲 / [live-demo-script-2000.md](live-demo-script-2000.md) 限时版；录 ≥1080p |
+| 团队/学校/指导教师信息 | 用户尚未提供 | 用户 | 替换三版演示稿与 `docs/tech-doc.html` 中 `【】` 占位，再重出 PDF |
 | 平台报名、缴费、最终提交 | 属账号与对外提交 | 用户 | 按大赛通知操作 |
-| 在线演示加分项 | 依赖公网部署 | 部署后补 | 无需登录，准备演示数据与四段自测 |
 
-### 公网部署提醒
+### 公网部署（已完成）
 
-- 服务器建议 Ubuntu 22.04/24.04，2 核 4 GB 起步；纯 CPU 跑 7B 会很慢，演示优先用带 GPU 的机器或只演示已有证据。
-- `deploy/setup.sh` 首次执行会装依赖、建 `workshop` 用户、构建前端、装 systemd 与 Nginx；执行前先看脚本顶部注释。
-- **Nginx 必须关闭代理缓冲**（`proxy_buffering off`），否则 SSE 会被攒成一整段；配置已写好，不要照抄普通反代模板。
-- **uvicorn 必须 `--workers 1`**：诊断会话存在进程内存，多 worker 会导致会话找不到；量上来后再考虑 Redis，不要现在改。
-- HTTPS 用 certbot；域名未备案时先用 IP + HTTP 自测，备案后再上证书。
-- 部署后至少自测：`/health`、本地问答流式、云端升级、诊断打印四项。
+- 线上：`https://workshop.runfeather.cn`（HTTPS 自动续期），腾讯云 2 核 3.3 GB 无 GPU，与多服务共存，独立 systemd 单元 `workshop-qa`，未动现有服务。
+- **演示机口径与本机不同**：1.5B 模型、bge-m3 Q4 量化、阈值 **0.69**。线上演示讲 0.7928 / 0.6851 / 0.4308，本机讲 0.7833 / 0.6589 / 0.4242，别混讲；三版演示稿已注明切换点。
+- 关键配置已落实，不要改：Nginx `proxy_buffering off`（否则 SSE 不流式）、uvicorn `--workers 1`（诊断会话在内存）。
+- 完整实录与同机踩坑（模型源限速、镜像补 `.so`、长会话断连）见 [deployment.md](deployment.md) 第 11 节。
 
 ---
 
@@ -273,7 +270,9 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 - 诊断 6 步、报告 `CZ-20261105-070AF4`；
 - 技术文档 25 页、视频 5–8 分钟。
 
-**演示顺序**（与视频脚本一致）：本地问答带引用 → 拒答 → 云端升级 → 诊断完整链 + 打印 → MCP 终端 → 知识库管理 → 总结。每段都先给结论再操作，避免冷场。
+**线上演示机口径**（只在线上演示时用）：阈值 0.69；0.7928 / 0.6851 / 0.4308；报告 `CZ-20261112-839A03`。
+
+**演示顺序**（与三版演示稿一致）：本地问答带引用 → 拒答 → 云端升级 → 诊断完整链 + 打印 → MCP 终端 → 知识库管理 → 总结。每段都先给结论再操作，避免冷场。
 
 **常见追问一句话答法**：
 
@@ -293,8 +292,8 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 - [ ] 克隆仓库，按第 3 节跑通本地三视图；
 - [ ] 跑第 5 节三条验收命令，确认结果与 `docs/evidence/` 一致；
 - [ ] 读 `docs/index.md` 与 `acceptance.md`，能复述五个数字；
-- [ ] 确认队伍信息，替换 `docs/video-script.md` 与技术文档占位；
-- [ ] 拿到服务器信息后部署，补 README 在线演示链接；
+- [ ] 确认队伍信息，替换三版演示稿与 `docs/tech-doc.html` 占位；
+- [x] 公网部署并实测通过，README 已补在线演示链接；
 - [ ] 录视频、平台提交；
 - [ ] 每次改动后提交并 push，保持每日真实提交历史。
 
@@ -311,4 +310,4 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-相关文档：[README](../README.md) · [设计说明索引](index.md) · [逐项验收](acceptance.md) · [部署手册](../deploy/README.md) · [视频脚本](video-script.md)
+相关文档：[README](../README.md) · [设计说明索引](index.md) · [逐项验收](acceptance.md) · [部署手册](../deploy/README.md) · [演讲稿 1500 字](demo-speech.md) · [操作稿 2500 字](live-demo-script.md) · [操作稿 2000 字](live-demo-script-2000.md)
