@@ -29,7 +29,34 @@
 
 ---
 
-## 2. 关键链接与权限
+## 2. 现在最要紧的三件事（都在用户侧）
+
+**① 队伍信息占位替换**
+
+三版演示稿开头都有 `【学校名称】【团队名称】` 占位：
+
+| 文件 | 用途 |
+| --- | --- |
+| [demo-speech.md](demo-speech.md) | 演讲稿 1500 字，纯旁白，约 6–7 分钟 |
+| [live-demo-script.md](live-demo-script.md) | 操作稿 2500 字，边点边讲，约 8 分钟 |
+| [live-demo-script-2000.md](live-demo-script-2000.md) | 操作稿 2000 字版，限时场景，约 9–10 分钟（含等待） |
+
+替换后如有改动，`docs/tech-doc.html` 里的 `【】` 占位也要一并替换并重出 PDF（技术文档 PDF 在仓库根目录）。
+
+**② 录制演示视频**
+
+- 三版稿任选其一（现场限时选 2000 字版，普通用 2500 字版）。
+- 规格：5–8 分钟、≥1080p、横屏、录屏 + 旁白，无需出镜。
+- **数据口径**：本机演示讲 0.6 阈值（0.7833 / 0.6589 / 0.4242）；线上演示机讲 0.69 阈值（0.7928 / 0.6851 / 0.4308），稿子里已注明切换点，别混讲。
+- 录制前按 [video-script.md](video-script.md) 第 0 节的清单逐项检查（Ollama 已启动、知识库已导入、云端问题提前试一次）。
+
+**③ 平台报名与提交**
+
+截止 **2026-11-18**（报名与省赛提交同日）。内部冻结线：功能 11-15 冻结、材料 11-17 定稿、11-18 只提交。属账号与对外提交，按大赛通知操作。
+
+---
+
+## 3. 关键链接与权限
 
 | 事项 | 地址 / 说明 |
 | --- | --- |
@@ -45,9 +72,9 @@
 
 ---
 
-## 3. 五分钟跑起来（本机 Windows 开发环境）
+## 4. 五分钟跑起来（本机 Windows 开发环境）
 
-### 3.1 前置
+### 4.1 前置
 
 - Python 3.11+、Node.js 18+（推荐 20）
 - Ollama，已拉取 `qwen2.5:7b-instruct-q4_K_M` 与 `bge-m3`
@@ -59,7 +86,7 @@
 OLLAMA_MODELS="D:\tools\ollama-models" /d/tools/ollama/ollama.exe serve
 ```
 
-### 3.2 配置
+### 4.2 配置
 
 ```bash
 cd "D:\大学\竞赛\传智杯"
@@ -69,7 +96,7 @@ cp .env.example backend/.env
 
 `backend/.env` 已被 `.gitignore` 排除，**永远不要提交**。
 
-### 3.3 启动后端
+### 4.3 启动后端
 
 ```bash
 cd "D:\大学\竞赛\传智杯\backend"
@@ -85,7 +112,7 @@ python -m venv .venv
 
 健康检查：<http://127.0.0.1:8000/health>，应返回模型名、阈值 0.6、路由模式与 `frontend_built`。
 
-### 3.4 启动前端
+### 4.4 启动前端
 
 开发态（热更新，端口 5173，`/api` 已代理到 8000）：
 
@@ -105,7 +132,7 @@ npm run build
 
 > 先 build 再启动后端；改了前端必须重新 build，否则 8000 端口还是旧页面。浏览器缓存顽固时按 `Ctrl+F5`。
 
-### 3.5 首次导入知识库
+### 4.5 首次导入知识库
 
 ```bash
 curl -X POST http://127.0.0.1:8000/api/kb/import
@@ -114,7 +141,7 @@ curl http://127.0.0.1:8000/api/kb/documents
 
 15 份文档、123 个切片，首次向量化约 10–30 秒。`data/chroma/` 与 `data/kb_registry.json` 是运行时数据，**不在仓库里**；新克隆的仓库必须导入一次。
 
-### 3.6 五个演示动作
+### 4.6 五个演示动作
 
 1. 问“注塑机开机前需要检查什么？”→ 本地答案 + 引用卡片；
 2. 问“如何做红烧肉？”→ 明确拒答，来源为空；
@@ -124,7 +151,7 @@ curl http://127.0.0.1:8000/api/kb/documents
 
 ---
 
-## 4. 目录地图（接手先看这些）
+## 5. 目录地图（接手先看这些）
 
 | 路径 | 作用 | 备注 |
 | --- | --- | --- |
@@ -146,12 +173,12 @@ curl http://127.0.0.1:8000/api/kb/documents
 | `backend/scripts/calibrate.py` | 30 条阈值校准 | 可复现 |
 | `backend/scripts/acceptance_routes.py` | 三路径 + 诊断验收 | 写 `docs/evidence/` |
 | `deploy/` | `setup.sh` / `deploy.sh` / systemd / Nginx | 公网部署用 |
-| `docs/` | 设计说明、验收、证据、脚本 | 答辩复习 |
+| `docs/` | 设计说明、验收、证据、演示稿三版 | 答辩复习 |
 | `data/docs/` | 15 份示例知识库 | 自编演示数据 |
 
 ---
 
-## 5. 验收怎么复现
+## 6. 验收怎么复现
 
 前提：Ollama 与后端均在运行，知识库已导入。
 
@@ -168,7 +195,7 @@ backend/.venv/Scripts/python.exe backend/scripts/acceptance_routes.py
 backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 ```
 
-预期结果（2026-11-05 实测）：
+预期结果（本机 2026-11-05 实测；演示机口径见第 9 节）：
 
 | 项 | 结果 |
 | --- | --- |
@@ -182,29 +209,29 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-## 6. 关键参数（不要随手改）
+## 7. 关键参数（不要随手改）
 
 | 参数 | 值 | 依据 |
 | --- | --- | --- |
 | 切片长度 / 重叠 | 600 字 / 80 字 | 中文手册段落完整性与上下文平衡 |
 | 向量模型 | `bge-m3`，1024 维 | 中文检索效果 |
 | 检索 top-k | 4 | 覆盖多文档又不过度稀释 |
-| 拒答阈值 | **0.6** | 30 条问句校准的安全带中点 |
-| 生成模型 | `qwen2.5:7b-instruct-q4_K_M` | 8 GB 显存可跑，中文稳定 |
+| 拒答阈值 | **0.6**（本机）/ **0.69**（演示机） | 30 条问句校准的安全带中点；演示机 1.5B 生成层拒答弱，灰区问题易带引用编造，故调高 |
+| 生成模型 | `qwen2.5:7b-instruct-q4_K_M`（本机）/ `qwen2.5:1.5b-instruct-q4_K_M`（演示机） | 8 GB 显存可跑，中文稳定；演示机 3.3 GB 内存装不下 7B |
 | 路由模式 | `auto`（默认）/ `kb_only` | 低置信才上云 |
 | 诊断会话 TTL | 2 小时，内存保存 | 重启即丢失，设计如此 |
 | 处置单编号 | `CZ-YYYYMMDD-XXXXXX` | 按日期 + 随机后缀 |
 
-阈值改动必须重新跑 `calibrate.py` 并更新校准记录；把 0.6 调低会放行无关问题，调高会误伤正常提问。
+阈值改动必须重新跑 `calibrate.py` 并更新校准记录；把阈值调低会放行无关问题，调高会误伤正常提问。
 
 ---
 
-## 7. 已验收内容摘要
+## 8. 已验收内容摘要
 
 | 交付项 | 结论 | 证据入口 |
 | --- | --- | --- |
 | 前端问答界面 | ✅ SSE、引用卡片、三态路由标识、移动端 | `docs/assets/chat-*.png` |
-| 拒答阈值校准 | ✅ 30 条问句，阈值 0.6 | [calibration.md](calibration.md) |
+| 拒答阈值校准 | ✅ 30 条问句，正向最低 0.675、负向最高 0.522 | [calibration.md](calibration.md) |
 | 故障排查向导 | ✅ 6 步 + A4 处置单 + Markdown | [evidence/diagnosis-session.json](evidence/diagnosis-session.json) |
 | 端云协同路由 | ✅ 三路径实测 | [route-local.json](evidence/route-local.json)、[route-cloud.json](evidence/route-cloud.json)、[route-refusal.json](evidence/route-refusal.json) |
 | MCP 封装 | ✅ 官方客户端可调用 | [evidence/mcp-test.txt](evidence/mcp-test.txt) |
@@ -214,25 +241,18 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-## 8. 没做完的事与责任划分
-
-| 事项 | 当前卡点 | 谁来做 | 接手步骤 |
-| --- | --- | --- | --- |
-| 公网部署 / 在线演示 | ✅ 已完成，workshop.runfeather.cn 实测通过 | 已完成 | 运维见 [deployment.md](deployment.md) 第 11 节；日常更新跑 `deploy/deploy.sh` |
-| 演示视频成片 | 需真人旁白、剪辑、队伍信息 | 用户 | 三版稿任选：[demo-speech.md](demo-speech.md) 1500 字纯旁白 / [live-demo-script.md](live-demo-script.md) 2500 字边点边讲 / [live-demo-script-2000.md](live-demo-script-2000.md) 限时版；录 ≥1080p |
-| 团队/学校/指导教师信息 | 用户尚未提供 | 用户 | 替换三版演示稿与 `docs/tech-doc.html` 中 `【】` 占位，再重出 PDF |
-| 平台报名、缴费、最终提交 | 属账号与对外提交 | 用户 | 按大赛通知操作 |
-
-### 公网部署（已完成）
+## 9. 公网部署（已完成）与演示口径
 
 - 线上：`https://workshop.runfeather.cn`（HTTPS 自动续期），腾讯云 2 核 3.3 GB 无 GPU，与多服务共存，独立 systemd 单元 `workshop-qa`，未动现有服务。
 - **演示机口径与本机不同**：1.5B 模型、bge-m3 Q4 量化、阈值 **0.69**。线上演示讲 0.7928 / 0.6851 / 0.4308，本机讲 0.7833 / 0.6589 / 0.4242，别混讲；三版演示稿已注明切换点。
+- 公网验收（证据在 `docs/evidence/`）：本地 0.7928 ≥ 0.69，首字 688 ms；云端升级 0.6851 < 0.69，首字 1211 ms；拒答 0.4308 升级云端后仍拒答；诊断 6 步 → SSR 损坏，报告 `CZ-20261112-839A03`。
 - 关键配置已落实，不要改：Nginx `proxy_buffering off`（否则 SSE 不流式）、uvicorn `--workers 1`（诊断会话在内存）。
-- 完整实录与同机踩坑（模型源限速、镜像补 `.so`、长会话断连）见 [deployment.md](deployment.md) 第 11 节。
+- 运维：`systemctl status workshop-qa`；日常更新 ssh `Luck` 后跑 `/opt/workshop-qa/deploy/deploy.sh`。
+- 完整实录与同机踩坑（模型源限速改魔搭/hf-mirror、镜像补 `.so`、长会话断连用 nohup 落盘）见 [deployment.md](deployment.md) 第 11 节。
 
 ---
 
-## 9. 已知的坑（都是踩过的）
+## 10. 已知的坑（都是踩过的）
 
 1. **Ollama 没启动**：后端能起来，但问答报模型连接错误；先确认 `11434` 端口有服务。
 2. **没导入知识库**：检索集合为空，问答全部拒答；跑一次 `/api/kb/import`。空集合检索已修复为返回 `min_sim`，不会再 500。
@@ -247,7 +267,7 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-## 10. 安全与合规约定
+## 11. 安全与合规约定
 
 - 所有密钥只在 `backend/.env`；仓库只保留 `.env.example`，代码与文档中不得出现真实 Key。
 - 部署时 `.env` 权限 `600`，属主为运行用户；服务器 SSH 用密钥，不用弱密码。
@@ -258,7 +278,7 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-## 11. 答辩与演示准备
+## 12. 答辩与演示准备
 
 **建议阅读顺序**：本文件 → [acceptance.md](acceptance.md)（知道做出了什么）→ [chunking.md](chunking.md) / [retrieval.md](retrieval.md)（为什么是 0.6）→ [rag-generation.md](rag-generation.md) / [routing.md](routing.md)（SSE 与端云）→ [diagnosis.md](diagnosis.md)（状态机）→ [frontend.md](frontend.md)（界面取舍）→ [mcp.md](mcp.md) / [deployment.md](deployment.md)。
 
@@ -287,10 +307,10 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-## 12. 接手后的第一步清单
+## 13. 接手后的第一步清单
 
-- [ ] 克隆仓库，按第 3 节跑通本地三视图；
-- [ ] 跑第 5 节三条验收命令，确认结果与 `docs/evidence/` 一致；
+- [ ] 克隆仓库，按第 4 节跑通本地三视图；
+- [ ] 跑第 6 节三条验收命令，确认结果与 `docs/evidence/` 一致；
 - [ ] 读 `docs/index.md` 与 `acceptance.md`，能复述五个数字；
 - [ ] 确认队伍信息，替换三版演示稿与 `docs/tech-doc.html` 占位；
 - [x] 公网部署并实测通过，README 已补在线演示链接；
@@ -299,7 +319,7 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 
 ---
 
-## 13. 维护约定
+## 14. 维护约定
 
 - **提交节奏**：每完成一个模块即提交并 push，禁止攒到最后；提交信息写清“做了什么、为什么”。
 - **改检索/提示词/路由**：必须重跑校准或验收脚本，更新 `docs/evidence/` 与 `acceptance.md`，否则视为未验收。
