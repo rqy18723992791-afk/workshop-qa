@@ -26,7 +26,7 @@
 | 项目 | 地址 / 状态 |
 | --- | --- |
 | 开源仓库 | <https://github.com/rqy18723992791-afk/workshop-qa> |
-| 在线演示 | 待部署（服务器信息到位后补公网地址；无需登录） |
+| 在线演示 | ✅ 已上线：<http://1.14.203.217>（无需登录；`workshop.runfeather.cn` 待 DNS 生效后启用） |
 | 演示视频 | 待录制（5–8 分钟，≥1080p；链接录制后补） |
 | 技术文档 | [车间智答-技术文档.pdf](车间智答-技术文档.pdf)（仓库根目录，≤30 页） |
 | 设计说明 | [docs/index.md](docs/index.md)（答辩复习材料） |
@@ -56,7 +56,7 @@
 | 故障排查向导 + 处置单 | ✅ | 6 步走完，结论「SSR 损坏」，A4 PDF 无裁切 |
 | 端云协同路由 | ✅ | 本地 0.7833 不上云；0.6589 本地拒答后切 `deepseek-chat` |
 | MCP 工具 | ✅ | 官方客户端 `list_tools` + 调用成功，`max_score=0.8078` |
-| 部署脚本与文档 | ✅ 本地生产态 | 单端口 8000 跑通三视图与 SSE；公网待服务器信息 |
+| 部署脚本与文档 | ✅ 公网在线 | 腾讯云 2 核 3.3GB 无 GPU；公网三路径 + 诊断实测通过，证据见 `docs/evidence/`（2026-11-12） |
 | 技术文档 / 视频脚本 | ✅ 初稿 | PDF 在仓库根目录；脚本见 [docs/video-script.md](docs/video-script.md) |
 
 逐项验收记录与原始 JSON：[docs/acceptance.md](docs/acceptance.md)。

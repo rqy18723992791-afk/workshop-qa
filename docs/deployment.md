@@ -203,3 +203,34 @@ sudo bash deploy/deploy.sh
 - **密钥怎么保证不进仓库？** `.gitignore` 排除 `backend/.env`，仓库只有 `.env.example`；部署脚本复制示例后 `chmod 600`；代码里只从环境变量读，不写默认密钥。
 - **服务器配置不够怎么办？** 7B q4 约 4.7 GB，4 GB 内存的机器可换 `qwen2.5:3b-instruct-q4_K_M`，改 `LLM_MODEL` 即可，检索和前端不变；代价是回答质量略降。
 - **断网还能用吗？** 本地路径完全不依赖外网；只有 `auto` 模式下的低置信问题会尝试云端，失败会回退为拒答并提示，不影响本地问答。
+
+## 11. 公网部署实录（2026-11-12）
+
+**线上地址**：`http://1.14.203.217`（`workshop.runfeather.cn` 待 HTTPS 就绪后启用）。无需登录。
+
+**服务器**：腾讯云 CVM `1.14.203.217`，Ubuntu 22.04，2 核 / 3.3 GB / 无 GPU。与 judge（3456）、library（8080）、portfolio（3000）、pet（3457）、nextchat、one-api 共存，部署时未改动任何现有服务；新增独立 systemd 单元 `workshop-qa`（用户 `workshop`）与 nginx 站点 `workshop-qa`（显式 `server_name`，不设 default_server，不抢占 IP 默认入口）。
+
+**演示机模型配置**（与仓库默认不同，仅限演示机）：
+
+| 项 | 演示机值 | 说明 |
+| --- | --- | --- |
+| `LLM_MODEL` | `qwen2.5:1.5b-instruct-q4_K_M` | 3.3 GB 内存装不下 7B；1.5B 约 1 GB |
+| `EMBED_MODEL` | `bge-m3`（Q4_K_M 量化，437 MB） | 官方镜像 FP16 1.2 GB 内存压力大；Q4 检索相似度实测与 FP16 几乎一致（0.7928 vs 0.7833） |
+| `RETRIEVAL_MIN_SIM` | **0.69** | 1.5B 的生成层拒答弱，灰区问题易带引用编造（实测编出「螺杆磨损 10% 更换」）；把灰区交给云端更安全。本机校准值 0.6 不变，演示机是配置覆盖 |
+
+**公网验收**（`backend/scripts/acceptance_routes.py`，证据在 `docs/evidence/`）：
+
+- 本地路径：0.7928 ≥ 0.69，`route=local`，首字 688 ms；
+- 云端升级：0.6851 < 0.69，`route=cloud`，DeepSeek 作答，首字 1211 ms；
+- 拒答：0.4308，升级云端后仍拒答，来源为空，不编造；
+- 诊断：6 步完整链 → SSR 损坏，报告号 `CZ-20261112-839A03`。
+
+**踩过的坑（供同机部署参考）**：
+
+1. 服务器直连 `ollama.com`/`registry.ollama.ai` 严重限速（11 MB/s 起速后跌到 12 KB/s），模型 GGUF 改从魔搭（`gpustack/bge-m3-GGUF`）与 hf-mirror 拉取，`ollama create` 注册；pip 用腾讯镜像、npm 用 npmmirror。
+2. `install.sh` 下载中断导致 `/usr/local/lib/ollama` 缺 `llama-server` 与整套 `.so`：从 `mirror.ccs.tencentyun.com/ollama/ollama:0.40.16` 镜像 `docker cp` 补齐（注意 `find -type f` 会漏掉软链，需 `cp -a`）。
+3. SSH 长会话会被运营商掐断、远端进程存活：长任务一律 `nohup ... > log &` 落盘，轮询日志。
+4. 已加 2 GB swapfile（fstab 持久化，`vm.swappiness=10`），防模型加载 OOM。
+5. Windows 终端 curl 发中文 JSON 会因编码坏包：用 `--data-binary @文件`（UTF-8）。
+
+**运维**：`systemctl status workshop-qa` / `journalctl -u workshop-qa -f`；更新走 `deploy/deploy.sh`（会重建前端并重启）；Ollama 设了 `OLLAMA_KEEP_ALIVE=2m` 空闲即卸载省内存。
