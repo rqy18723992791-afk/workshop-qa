@@ -27,7 +27,7 @@
 | --- | --- |
 | 开源仓库 | <https://github.com/rqy18723992791-afk/workshop-qa> |
 | 在线演示 | ✅ <https://workshop.runfeather.cn>（HTTPS，无需登录；备用直连 <http://1.14.203.217>） |
-| 演示视频 | 待录制（5–8 分钟，≥1080p；链接录制后补） |
+| 演示视频 | ✅ <https://b23.tv/IAYNKPo>（【重庆建筑工程职业学院 潜龙勿用团队】5–8 分钟，≥1080p） |
 | 技术文档 | [车间智答-技术文档.pdf](车间智答-技术文档.pdf)（仓库根目录，≤30 页） |
 | 设计说明 | [docs/index.md](docs/index.md)（答辩复习材料） |
 

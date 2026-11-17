@@ -3,7 +3,7 @@
 > 更新时间：2026-11-16
 > 适用对象：接手的队友、指导教师、后续维护者
 > 仓库：<https://github.com/rqy18723992791-afk/workshop-qa>（公开，MIT）
-> 当前状态：**八项交付全部完成并验收留痕；公网演示已上线（https://workshop.runfeather.cn，2026-11-12 实测通过）；队伍信息已全量落位（重庆建筑工程职业学院「潜龙勿用」，提交 f2c3937）；技术文档新 PDF 已重出、待替换根目录文件；视频成片、平台提交待办。**
+> 当前状态：**八项交付全部完成并验收留痕；公网演示已上线（https://workshop.runfeather.cn，2026-11-12 实测通过）；队伍信息已全量落位（重庆建筑工程职业学院「潜龙勿用」，提交 f2c3937）；技术文档新 PDF 已替换根目录（91f492a）；演示视频已出片（https://b23.tv/IAYNKPo）；平台报名提交待办（截止 2026-11-18 15:00）。**
 
 本文档只写“接手后立刻要知道的事”：怎么跑、东西在哪、哪些不能动、还差什么。设计原理看 [docs/index.md](index.md)，验收数据看 [acceptance.md](acceptance.md)。
 
@@ -61,7 +61,7 @@ cp "$TEMP/workshop-qa-techdoc.pdf" "D:/大学/竞赛/传智杯/车间智答-技�
 提交前逐项核对（官方交付物仅 4 类）：
 
 - [ ] 代码仓库 public：README 四项（项目介绍 / 技术架构 / 安装运行指南 / 团队信息）齐备、Git 历史完整、环境变量模板在根目录
-- [ ] 演示视频：5–8 分钟、MP4、≥1080p、普通话；最终链接同步进 README（README 视频行目前还是「待录制」字样）
+- [x] 演示视频：5–8 分钟、MP4、≥1080p、普通话；链接已同步进 README（<https://b23.tv/IAYNKPo>）
 - [ ] 技术文档：根目录 `车间智答-技术文档.pdf`，25 页 ≤30，封面为队伍真实信息（见 ① 收尾 A）
 - [ ] 在线演示：<https://workshop.runfeather.cn>（可选加分，评审期间保持可用）
 
@@ -77,7 +77,7 @@ cp "$TEMP/workshop-qa-techdoc.pdf" "D:/大学/竞赛/传智杯/车间智答-技�
 | --- | --- |
 | 开源仓库 | <https://github.com/rqy18723992791-afk/workshop-qa> |
 | 在线演示 | <https://workshop.runfeather.cn>（HTTPS，无需登录；备用 <http://1.14.203.217>） |
-| 演示视频 | 待录制后补 |
+| 演示视频 | ✅ <https://b23.tv/IAYNKPo>（【重庆建筑工程职业学院 潜龙勿用团队】） |
 | 技术文档 | 仓库根目录 `车间智答-技术文档.pdf` |
 | 设计说明总索引 | [docs/index.md](index.md) |
 | 逐项验收 | [docs/acceptance.md](acceptance.md) |
@@ -329,7 +329,7 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 - [ ] 读 `docs/index.md` 与 `acceptance.md`，能复述五个数字；
 - [x] 确认队伍信息，替换三版演示稿与 `docs/tech-doc.html` 占位（2026-11-16）；
 - [x] 公网部署并实测通过，README 已补在线演示链接；
-- [ ] 录视频、平台提交；
+- [x] 录视频（<https://b23.tv/IAYNKPo>）；平台提交待办；
 - [ ] 每次改动后提交并 push，保持每日真实提交历史。
 
 ---
