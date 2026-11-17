@@ -192,7 +192,7 @@ backend/.venv/Scripts/python.exe backend/scripts/test_mcp_client.py
 片头：
 
 ```
-全国高校 AI Web 开发挑战赛
+AI WEB网页开发挑战赛
 重庆建筑工程职业学院 · 潜龙勿用
 成员：任秋羽 唐欣捷 吴城成
 指导教师：孙成杰 梁密
